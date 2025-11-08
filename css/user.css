@@ -1,0 +1,197 @@
+body {
+  font-family: "Poppins", "Inter", sans-serif;
+  background-color: #f5f6fa;
+  margin: 0;
+  padding: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.okvir-forme {
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 840px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 30px 40px;
+}
+
+
+.naslov-forme {
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #111;
+}
+
+.linija {
+  width: 80%;
+  height: 3px;
+  background-color: #5b3fff;
+  margin: 0 auto 15px auto;
+  border-radius: 10px;
+}
+
+.opis-forme {
+  text-align: center;
+  color: #555;
+  margin-bottom: 25px;
+  font-size: 15px;
+}
+
+
+.korisnik-podaci,
+.sigurnost-podaci,
+.notifikacije-podaci {
+  border-radius: 10px;
+  padding: 20px 25px;
+  margin-bottom: 20px;
+}
+
+.korisnik-podaci {
+  background-color: #eef1ff;
+}
+
+.sigurnost-podaci {
+  background-color: #ffeaea;
+}
+
+.notifikacije-podaci {
+  background-color: #e9fbee;
+}
+
+
+.korisnik-podaci .naslov-sekcije {
+  color: #3246a8;
+}
+
+.sigurnost-podaci .naslov-sekcije {
+  color: #c95757;
+}
+
+.notifikacije-podaci .naslov-sekcije {
+  color: #2e8055;
+}
+
+.naslov-sekcije {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+
+.grupa-unosa {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.labela {
+  flex: 1 1 40%;
+  color: #333;
+  font-size: 14px;
+}
+
+.unos {
+  flex: 1 1 55%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.unos:focus {
+  border-color: #5b3fff;
+}
+
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
+.sigurnost-podaci .grupa-unosa.checkbox {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.grupa-unosa.radio-polje {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.radio-grupa {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 25px;
+  margin-top: 8px;
+}
+
+.radio-grupa label {
+  font-size: 14px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+
+.dugme-dio {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.dugme-spremi {
+  background-color: #5b3fff;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.dugme-spremi:hover {
+  background-color: #4a34d6;
+}
+
+
+@media (max-width: 750px) {
+  .grupa-unosa {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .labela {
+    margin-bottom: 6px;
+  }
+
+  .unos {
+    width: 100%;
+  }
+
+  
+  .sigurnost-podaci .grupa-unosa.checkbox {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  
+  .radio-grupa {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+}
