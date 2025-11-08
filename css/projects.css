@@ -1,0 +1,281 @@
+body {
+  margin: 0;
+  font-family: "Poppins", "Inter", sans-serif;
+  background-color: #f5f6fa;
+  color: #333333;
+  display: flex;
+  min-height: 100vh;
+}
+
+
+.lijevi-sidebar {
+  width: 250px;
+  background-color: #f8f9fb;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.naslov-aplikacije {
+  color: #5b3fff;
+  font-size: 35px;
+  margin-bottom: 20px;
+  padding-top: 0;
+}
+
+.nav-meni ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-stavka {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.nav-stavka span {
+  color: #333333;
+}
+
+
+.nav-stavka.aktivan {
+  background-color: #5b3fff;
+  border-radius: 8px;
+}
+
+.nav-stavka.aktivan span {
+  color: white;
+}
+
+
+.nav-stavka:hover {
+  background-color: #7d65ff;
+  border-radius: 8px;
+}
+.nav-stavka:hover span {
+  color: white;
+}
+
+.nav-stavka:hover .ikona {
+  filter: brightness(0) invert(1);
+}
+
+
+.linija-separator {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 20px 0;
+}
+
+
+.profil-korisnika {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.profil-korisnika-krug {
+  background-color: #333333;
+  color: white;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.info-profil .ime {
+  font-weight: bold;
+}
+
+.info-profil .status {
+  color: #999999;
+  font-size: 14px;
+}
+
+
+.glavni-sadržaj {
+  flex: 1;
+  padding: 30px 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+
+.zaglavlje {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.zaglavlje h1 {
+  font-size: 42px;
+  margin-top: px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.polje-pretraga {
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+
+.dugme-noviprojekat {
+  background-color: #5b3fff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+}
+
+
+.dugme-noviprojekat:hover {
+  background-color: #4329c8;
+}
+
+
+.kartice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+
+.kartica,
+.kartica-aktivna,
+.kartica-noviprojekat {
+  background-color: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-sizing: border-box;
+  transition: box-shadow 0.25s ease;
+}
+
+
+.kartica:hover,
+.kartica-aktivna:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.naslov-projekta {
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.opis-projekta {
+  margin: 8px 0 18px 0;
+  color: #666666;
+}
+
+.detalji-projekta p {
+  margin: 4px 0;
+}
+
+.detalji-projekta strong {
+  font-weight: bold;
+}
+
+
+.kartica-aktivna {
+  position: relative;
+  background-color: #f9f9ff;             
+  border: 2px solid #dcd8ff;             
+  box-shadow: none;                    
+}
+
+.aktivna-oznaka {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background-color: #e3dfff;
+  color: #5b3fff;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+
+.kartica-noviprojekat {
+  border: 2px dashed #ccc;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kartica-noviprojekat-sadrzaj {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.kartica-noviprojekat-ikona {
+  font-size: 40px;
+  color: #5b3fff;
+  margin-bottom: 10px;
+}
+
+.kartica-noviprojekat-tekst {
+  color: #777777;
+}
+
+.kartica-noviprojekat:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/*za mobitele*/
+@media (max-width: 750px) {
+  body {
+    flex-direction: column;
+  }
+
+  .lijevi-sidebar {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+  }
+
+  .nav-meni ul {
+    display: flex;
+    gap: 15px;
+  }
+
+  .profil-korisnika {
+    display: none;
+  }
+
+  .glavni-sadržaj {
+    padding: 20px;
+  }
+
+  .kartice-grid {
+    grid-template-columns: 1fr;
+  }
+}
