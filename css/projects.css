@@ -96,6 +96,7 @@ body {
 
 .info-profil .ime {
   font-weight: bold;
+  color: #333333;
 }
 
 .info-profil .status {
@@ -202,7 +203,7 @@ body {
 .kartica-aktivna {
   position: relative;
   background-color: #f9f9ff;             
-  border: 2px solid #dcd8ff;             
+  border: 2.5px solid #dfd8ff;             
   box-shadow: none;                    
 }
 
