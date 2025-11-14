@@ -160,7 +160,33 @@ body {
 
 
 @media (max-width: 750px) {
-  .sadrzaj { flex-direction: column; }
-  .lijevi-panel { width: 100%; order: -1; } 
-  .zaglavlje-centar { justify-content: center; }
+
+  
+  .sadrzaj {
+    flex-direction: column;
+  }
+
+  .lijevi-panel {
+    width: 100%;
+    order: -1;
+    margin: 0 0 20px 0;
+  }
+
+ 
+  .zaglavlje-centar {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .zaglavlje-centar button,
+  .dugme-tip {
+    flex: 1 1 45%;
+    text-align: center;
+  }
+
+  
+  .glavni-editor {
+    margin: 10px 15px;
+    padding: 20px;
+  }
 }
