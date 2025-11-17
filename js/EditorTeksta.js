@@ -43,7 +43,47 @@ if (divRef.getAttribute("contenteditable") !== "true") throw new Error("Neisprav
 }
 
   
-  function dajUloge() {}
+ function dajUloge() {
+    let linije = uzmiLinije();
+    let uloge = [];
+    let vidjene = new Set();
+
+    for (let i = 0; i < linije.length; i++) {
+
+        let linija = linije[i];
+
+        if (linija.length === 0) continue;
+        if (linija !== linija.toUpperCase()) continue;
+        if (!/[A-ZŠĐŽČĆ]/.test(linija)) continue;
+        if (/[0-9]/.test(linija)) continue;
+        if (/[\.,:]/.test(linija)) continue;
+
+        let j = i + 1;
+        let validna = false;
+
+        while (j < linije.length) {
+            let next = linije[j].trim();
+
+            if (next === "") { j++; continue; }
+            if (/^\(.*\)$/.test(next)) { j++; continue; }
+
+            if (next === next.toUpperCase()) break;
+
+            validna = true;
+            break;
+        }
+
+        if (validna && !vidjene.has(linija)) {
+            vidjene.add(linija);
+            uloge.push(linija);
+        }
+    }
+
+    return uloge;
+}
+
+
+
   function pogresnaUloga() {}
   function brojLinijaTeksta() {}
   function scenarijUloge() {}
@@ -52,7 +92,12 @@ if (divRef.getAttribute("contenteditable") !== "true") throw new Error("Neisprav
 
 
 
-  function parsirajTekst() {}
+ function uzmiLinije() {
+    let tekst = editorDiv.innerText.replace(/\r/g, "");
+    let linije = tekst.split("\n");
+    return linije.map(l => l.trim());
+}
+
 
     return {
      dajBrojRijeci: dajBrojRijeci,
