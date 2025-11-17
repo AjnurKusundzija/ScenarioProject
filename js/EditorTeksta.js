@@ -117,14 +117,49 @@ for (let A of uloge) {
 }
 
 return rezultat;
+function brojLinijaTeksta(uloga) {
+    if (!uloga) return 0;
 
-  function brojLinijaTeksta() {}
+    uloga = uloga.toUpperCase();
+    let linije = uzmiLinije();
+
+    let brojac = 0;
+
+    for (let i = 0; i < linije.length; i++) {
+        let linija = linije[i].trim();
+
+        if (linija === uloga) {
+            let j = i + 1;
+
+            while (j < linije.length) {
+                let next = linije[j].trim();
+
+                
+                if (next === "") break;
+                if (next === next.toUpperCase()) break;
+               if (next.startsWith("(") && next.endsWith(")")) {
+      j++;
+      continue;
+}
+
+
+                
+                brojac++;
+
+                j++;
+            }
+        }
+    }
+
+    return brojac;
+}
+
   function scenarijUloge() {}
   function grupisiUloge() {}
   function formatirajTekst() {}
 
 
-
+//pomoćne funkcije
  function uzmiLinije() {
     let tekst = editorDiv.innerText.replace(/\r/g, "");
     let linije = tekst.split("\n");
