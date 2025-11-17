@@ -83,8 +83,41 @@ if (divRef.getAttribute("contenteditable") !== "true") throw new Error("Neisprav
 }
 
 
+let rezultat = [];
 
-  function pogresnaUloga() {}
+for (let A of uloge) {
+    for (let B of uloge) {
+
+        if (A === B) continue;
+
+        let diff = razlikaUKarakterima(A, B);
+
+        
+        let maxDiff;
+
+        if (A.length > 5 && B.length > 5) {
+            maxDiff = 2;
+        } else {
+            maxDiff = 1;
+        }
+
+        if (diff > maxDiff) continue;
+
+        
+        if (brojac[B] < 4) continue;
+
+       
+        if (brojac[B] < brojac[A] + 3) continue;
+
+        
+        if (!rezultat.includes(A)) {
+            rezultat.push(A);
+        }
+    }
+}
+
+return rezultat;
+
   function brojLinijaTeksta() {}
   function scenarijUloge() {}
   function grupisiUloge() {}
@@ -97,6 +130,17 @@ if (divRef.getAttribute("contenteditable") !== "true") throw new Error("Neisprav
     let linije = tekst.split("\n");
     return linije.map(l => l.trim());
 }
+function razlikaUKarakterima(a, b) {
+    if (a.length !== b.length) return 100;
+
+    let diff = 0;
+    for (let i = 0; i < a.length; i++) {
+        if (a[i] !== b[i]) diff++;
+    }
+    return diff;
+}
+
+
 
 
     return {
