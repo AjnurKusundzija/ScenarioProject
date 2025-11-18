@@ -154,7 +154,68 @@ function brojLinijaTeksta(uloga) {
     return brojac;
 }
 
-  function scenarijUloge() {}
+function scenarijUloge(uloga) {
+    if (!uloga) return [];
+    uloga = uloga.toUpperCase();
+
+    let sveReplike = parsirajTekst();
+    let moje = sveReplike.filter(r => r.uloga === uloga);
+
+    if (moje.length === 0) return [];
+
+    let rezultat = [];
+
+    for (let r of moje) {
+
+        // pronađi indeks ove replike u svim replikama
+        let indexUSvim = sveReplike.indexOf(r);
+
+        // PRETHODNI
+        let prethodni = null;
+        if (indexUSvim > 0) {
+            let p = sveReplike[indexUSvim - 1];
+            if (p.scena === r.scena) {
+                prethodni = {
+                    uloga: p.uloga,
+                    linije: p.linije
+                };
+            }
+        }
+
+        // SLJEDEĆI
+        let sljedeci = null;
+        if (indexUSvim < sveReplike.length - 1) {
+            let s = sveReplike[indexUSvim + 1];
+            if (s.scena === r.scena) {
+                sljedeci = {
+                    uloga: s.uloga,
+                    linije: s.linije
+                };
+            }
+        }
+
+        // TRENUTNI
+        let trenutni = {
+            uloga: r.uloga,
+            linije: r.linije
+        };
+
+        // dodaj rezultat
+        rezultat.push({
+            scena: r.scena,
+            pozicijaUTekstu: r.pozicijaUTekstu,
+            prethodni: prethodni,
+            trenutni: trenutni,
+            sljedeci: sljedeci
+        });
+    }
+
+    return rezultat;
+}
+
+
+
+
   function grupisiUloge() {}
   function formatirajTekst() {}
 
@@ -175,6 +236,79 @@ function razlikaUKarakterima(a, b) {
     return diff;
 }
 
+function parsirajTekst() {
+    let linije = uzmiLinije();
+    let rezultat = [];
+
+    let trenutnaScena = "NEPOZNATA SCENA";
+    let pozicija = 0;
+    let i = 0;
+
+    while (i < linije.length) {
+
+        let linija = linije[i].trim();
+
+        
+        if (
+            (linija.startsWith("INT.") || linija.startsWith("EXT.")) &&
+            linija === linija.toUpperCase()
+        ) {
+            trenutnaScena = linija;
+            pozicija = 0;
+            i++;
+            continue;
+        }
+
+        
+        if (jeUloga(linija)) {
+            let uloga = linija;
+            let j = i + 1;
+            let linijeGovora = [];
+
+            while (j < linije.length) {
+                let next = linije[j].trim();
+
+                if (next === "") break;
+                if (jeUloga(next)) break;
+                if (next.startsWith("(") && next.endsWith(")")) { j++; continue; }
+                if (
+                    (next.startsWith("INT.") || next.startsWith("EXT.")) &&
+                    next === next.toUpperCase()
+                ) break;
+
+                linijeGovora.push(next);
+                j++;
+            }
+
+            if (linijeGovora.length > 0) {
+                pozicija++;
+                rezultat.push({
+                    scena: trenutnaScena,
+                    uloga: uloga,
+                    linije: linijeGovora,
+                    pozicijaUTekstu: pozicija
+                });
+            }
+
+            i = j;
+            continue;
+        }
+
+        i++;
+    }
+
+    return rezultat;
+}
+
+
+function jeUloga(linija) {
+    if (linija.length === 0) return false;
+    if (linija !== linija.toUpperCase()) return false;
+    if (!/[A-ZŠĐŽČĆ]/.test(linija)) return false;
+    if (/[0-9]/.test(linija)) return false;
+    if (/[\.,:]/.test(linija)) return false;
+    return true;
+}
 
 
 
