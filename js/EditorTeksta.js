@@ -167,7 +167,7 @@ function scenarijUloge(uloga) {
 
     for (let r of moje) {
 
-        // pronađi indeks ove replike u svim replikama
+       
         let indexUSvim = sveReplike.indexOf(r);
 
         // PRETHODNI
@@ -200,7 +200,7 @@ function scenarijUloge(uloga) {
             linije: r.linije
         };
 
-        // dodaj rezultat
+        
         rezultat.push({
             scena: r.scena,
             pozicijaUTekstu: r.pozicijaUTekstu,
@@ -213,10 +213,57 @@ function scenarijUloge(uloga) {
     return rezultat;
 }
 
+function grupisiUloge() {
+    let sveReplike = parsirajTekst();
+
+    if (sveReplike.length === 0) return [];
+
+    let rezultat = [];
+    let trenutnaScena = null;
+    let trenutniSegment = 0;
+    let ulogeSegmenta = [];
+
+    for (let r of sveReplike) {
+
+        // nova scena → prekid segmenta
+        if (r.scena !== trenutnaScena) {
+
+            // ako postoji prethodna grupa → sačuvaj je
+            if (ulogeSegmenta.length > 0) {
+                rezultat.push({
+                    scena: trenutnaScena,
+                    segment: trenutniSegment,
+                    uloge: ulogeSegmenta.slice()
+                });
+            }
+
+            // inicijalizacija nove scene
+            trenutnaScena = r.scena;
+            trenutniSegment = 1;
+            ulogeSegmenta = [];
+        }
+
+        // dodaj ulogu u segment ako već nije dodana
+        if (!ulogeSegmenta.includes(r.uloga)) {
+            ulogeSegmenta.push(r.uloga);
+        }
+    }
+
+    // dodaj POSLJEDNJI segment
+    if (ulogeSegmenta.length > 0) {
+        rezultat.push({
+            scena: trenutnaScena,
+            segment: trenutniSegment,
+            uloge: ulogeSegmenta.slice()
+        });
+    }
+
+    return rezultat;
+}
 
 
 
-  function grupisiUloge() {}
+  
   function formatirajTekst() {}
 
 
@@ -234,6 +281,39 @@ function razlikaUKarakterima(a, b) {
         if (a[i] !== b[i]) diff++;
     }
     return diff;
+}
+function formatirajTekst(komanda) {
+
+    let sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0) return false;
+
+    let range = sel.getRangeAt(0);
+
+    // provjera da li selekcija postoji (nije prazna)
+    if (range.collapsed) return false;
+
+   
+    function jeUnutarEditora(node) {
+        while (node) {
+            if (node === editorDiv) return true;
+            node = node.parentNode;
+        }
+        return false;
+    }
+
+    // selekcija mora biti skroz unutar editora
+    if (!jeUnutarEditora(range.startContainer) ||
+        !jeUnutarEditora(range.endContainer)) {
+        return false;
+    }
+
+   
+    if (komanda === "bold") document.execCommand("bold");
+    else if (komanda === "italic") document.execCommand("italic");
+    else if (komanda === "underline") document.execCommand("underline");
+    else return false;
+
+    return true;
 }
 
 function parsirajTekst() {
