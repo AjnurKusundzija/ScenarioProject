@@ -93,6 +93,13 @@ body {
   min-height: 0;
 }
 
+.desni-sadrzaj {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin: 20px 20px 20px 0;
+}
+
 .lijevi-panel {
   width: 250px;
   background-color: #f8f9fb;
@@ -144,12 +151,12 @@ body {
 .glavni-editor {
   flex: 1;
   background-color: #fff;
-  margin: 20px 45px 30px 0;
   border-radius: 10px;
   padding: 30px 60px;
   box-shadow: 0 3px 8px rgba(0,0,0,0.25);
   font-family: "Courier Prime", "Courier New", monospace;
   line-height: 1.5em;
+  overflow-y: auto;
 }
 
 .naslov-scene {
@@ -159,6 +166,174 @@ body {
   margin-top: 0;
   margin-bottom: 20px;
 }
+
+.alatna-traka {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 20px;
+  margin: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
+}
+
+.alatna-traka .grupa {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.alatna-traka button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  font-weight: 500;
+}
+
+.alatna-traka button i {
+  pointer-events: none;
+}
+
+/* Zelena za formatiranje */
+#btnBold, #btnItalic, #btnUnderline {
+  background-color: #28a745;
+  color: white;
+}
+#btnBold:hover, #btnItalic:hover, #btnUnderline:hover {
+  background-color: #218838;
+}
+
+/* Plava za analizu */
+#btnBrojRijeci, #btnUloge, #btnPogresne,
+#btnLinije, #btnScenarij, #btnGrupe {
+  background-color: #5B3FFF;
+  color: white;
+}
+#btnBrojRijeci:hover, #btnUloge:hover, #btnPogresne:hover,
+#btnLinije:hover, #btnScenarij:hover, #btnGrupe:hover {
+  background-color: #472be8;
+}
+
+#ulogaInput {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  font-family: 'Poppins', sans-serif;
+  min-width: 180px;
+}
+
+/* Poruke ispod */
+.poruke-box {
+  margin: 20px;
+  background-color: #fff;
+  border-left: 4px solid #5B3FFF;
+  padding: 15px;
+  font-family: 'Courier Prime', monospace;
+  font-size: 14px;
+  color: #333;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  white-space: pre-wrap;
+  border-radius: 8px;
+}
+
+/* Editor toolbar */
+.editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+  padding: 12px 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+  align-items: center;
+}
+
+.editor-toolbar button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+}
+
+.editor-toolbar #btnBold,
+.editor-toolbar #btnItalic,
+.editor-toolbar #btnUnderline {
+  background-color: #28a745;
+  color: white;
+}
+
+.editor-toolbar #btnBold:hover,
+.editor-toolbar #btnItalic:hover,
+.editor-toolbar #btnUnderline:hover {
+  background-color: #218838;
+}
+
+.editor-toolbar #btnBrojRijeci,
+.editor-toolbar #btnUloge,
+.editor-toolbar #btnPogresne,
+.editor-toolbar #btnGrupisi,
+.editor-toolbar #btnBrojLinija,
+.editor-toolbar #btnScenarijUloge {
+  background-color: #5B3FFF;
+  color: white;
+}
+
+.editor-toolbar #btnBrojRijeci:hover,
+.editor-toolbar #btnUloge:hover,
+.editor-toolbar #btnPogresne:hover,
+.editor-toolbar #btnGrupisi:hover,
+.editor-toolbar #btnBrojLinija:hover,
+.editor-toolbar #btnScenarijUloge:hover {
+  background-color: #472be8;
+}
+
+/* Poruke div */
+.poruke {
+  margin-bottom: 15px;
+  padding: 12px 20px;
+  background-color: #fff;
+  border-left: 4px solid #5B3FFF;
+  border-radius: 8px;
+  font-family: 'Courier Prime', monospace;
+  font-size: 13px;
+  color: #333;
+  min-height: 20px;
+  white-space: pre-wrap;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+}
+
+/* Editor polje */
+.editor-polje {
+  min-height: 400px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: #fafafa;
+  font-family: 'Courier Prime', monospace;
+  font-size: 14px;
+  line-height: 1.8;
+  outline: none;
+}
+
+.editor-polje:focus {
+  border-color: #5B3FFF;
+  background-color: #fff;
+}
+
 
 
 
