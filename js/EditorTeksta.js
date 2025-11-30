@@ -12,15 +12,15 @@ let EditorTeksta = function (divReferenca) {
     function linijeTeksta() {
         
         const tekst = (elementEditora.innerText || "").replace(/\r/g, "");
-        return tekst.split("\n");
+        return tekst.split("\n");r
     }
 
     function jeNaslovScene(linija) {
         const t = linija.trim();
         if (!t) return false;
         if (t !== t.toUpperCase()) return false;
-        if (!/^(INT\.|EXT\.)/.test(t)) return false;
-        return /- (DAY|NIGHT|AFTERNOON|MORNING|EVENING)\s*$/.test(t);
+
+        return /^(INT\.|EXT\.)\s+/.test(t);
     }
 
     function jeUloga(linija) {
@@ -283,23 +283,23 @@ let EditorTeksta = function (divReferenca) {
         const rezultat = [];
 
         scene.forEach(scena => {
-            const dialogi = scena.stavke.filter(stavka => stavka.type === "dialog");
-            for (let i = 0; i < dialogi.length; i++) {
-                const dijalog = dialogi[i];
+            const dijalozi = scena.stavke.filter(stavka => stavka.type === "dialog");
+            for (let i = 0; i < dijalozi.length; i++) {
+                const dijalog = dijalozi[i];
                 if (dijalog.uloga !== ciljnaUloga) continue;
 
                 const trenutni = { uloga: dijalog.uloga, linije: dijalog.linije.join("\n") };
                 let prethodni = null;
                 for (let p = i - 1; p >= 0; p--) {
-                    if (dialogi[p].segment !== dijalog.segment) break;
-                    prethodni = { uloga: dialogi[p].uloga, linije: dialogi[p].linije.join("\n") };
+                    if (dijalozi[p].segment !== dijalog.segment) break;
+                    prethodni = { uloga: dijalozi[p].uloga, linije: dijalozi[p].linije.join("\n") };
                     break;
                 }
 
                 let sljedeci = null;
-                for (let n = i + 1; n < dialogi.length; n++) {
-                    if (dialogi[n].segment !== dijalog.segment) break;
-                    sljedeci = { uloga: dialogi[n].uloga, linije: dialogi[n].linije.join("\n") };
+                for (let n = i + 1; n < dijalozi.length; n++) {
+                    if (dijalozi[n].segment !== dijalog.segment) break;
+                    sljedeci = { uloga: dijalozi[n].uloga, linije: dijalozi[n].linije.join("\n") };
                     break;
                 }
 
