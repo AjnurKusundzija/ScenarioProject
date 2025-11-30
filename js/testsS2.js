@@ -117,34 +117,34 @@ describe('EditorTeksta Modul', () => {
             editorDiv = setupMockDom();
         });
 
-        it('treba tačno prebrojati riječi razdvojene razmakom i interpunkcijom', () => {
-            // Spec: "Riječ - cjelina teksta razdvojena razmakom ili znakovima interpunkcije"
-            // "Ovo,je.tekst" -> Ovo, je, tekst (3 riječi)
+        it('treba taÄno prebrojati rijeÄi razdvojene razmakom i interpunkcijom', () => {
+            // Spec: "RijeÄ - cjelina teksta razdvojena razmakom ili znakovima interpunkcije"
+            // "Ovo,je.tekst" -> Ovo, je, tekst (3 rijeÄi)
             editorDiv.innerHTML = "Ovo,je.tekst"; 
             editor = EditorTeksta(editorDiv);
             const res = editor.dajBrojRijeci();
-            assert.equal(res.ukupno, 3, 'Zarez i tačka trebaju razdvajati riječi.');
+            assert.equal(res.ukupno, 3, 'Zarez i taÄka trebaju razdvajati rijeÄi.');
         });
 
-        it('treba tretirati crtice i apostrofe UNUTAR riječi kao dio riječi', () => {
-            // Spec: "crtica i apostrof unutar riječi tretiraju se kao dio te riječi"
+        it('treba tretirati crtice i apostrofe UNUTAR rijeÄi kao dio rijeÄi', () => {
+            // Spec: "crtica i apostrof unutar rijeÄi tretiraju se kao dio te rijeÄi"
             editorDiv.innerHTML = "To-je to. Don't stop."; 
             editor = EditorTeksta(editorDiv);
             const res = editor.dajBrojRijeci();
             // To-je (1), to (1), Don't (1), stop (1) -> Total 4
-            assert.equal(res.ukupno, 4, 'Crtice i apostrofi unutar riječi se ne smiju tretirati kao separatori.');
+            assert.equal(res.ukupno, 4, 'Crtice i apostrofi unutar rijeÄi se ne smiju tretirati kao separatori.');
         });
 
         it('ne smije brojati brojeve i samostalne interpunkcijske znakove', () => {
-            // Spec: "Brojevi, samostalni interpunkcijski znakovi... ne smatraju se riječima"
-            editorDiv.innerHTML = "Riječ 123 45.6 ! ?"; 
+            // Spec: "Brojevi, samostalni interpunkcijski znakovi... ne smatraju se rijeÄima"
+            editorDiv.innerHTML = "RijeÄ 123 45.6 ! ?"; 
             editor = EditorTeksta(editorDiv);
             const res = editor.dajBrojRijeci();
-            // Riječ (1). 123 (0), 45.6 (0), ! (0), ? (0) -> Total 1
+            // RijeÄ (1). 123 (0), 45.6 (0), ! (0), ? (0) -> Total 1
             assert.equal(res.ukupno, 1, 'Brojevi i samostalni znakovi se ne smiju brojati.');
         });
 
-        it('treba brojati formatirane riječi (bold/italic)', () => {                     
+        it('treba brojati formatirane rijeÄi (bold/italic)', () => {                     
             editorDiv.innerHTML = "<b>Bold</b> <i>Italic</i> Obicna";
             editor = EditorTeksta(editorDiv);
             assert.deepEqual(editor.dajBrojRijeci(), { ukupno: 3, boldiranih: 1, italic: 1 });
@@ -160,11 +160,11 @@ describe('EditorTeksta Modul', () => {
             editorDiv = setupMockDom();
         });
 
-        it('treba vratiti listu uloga (SVE VELIKA SLOVA) praćenih govorom', () => {
-            // Spec: "isključivo velikim slovima, bez drugih znakova (brojeva, interpunkcije)"
-            // "odmah ispod te linije mora postojati najmanje jedna linija običan govor"
+        it('treba vratiti listu uloga (SVE VELIKA SLOVA) praÄ‡enih govorom', () => {
+            // Spec: "iskljuÄivo velikim slovima, bez drugih znakova (brojeva, interpunkcije)"
+            // "odmah ispod te linije mora postojati najmanje jedna linija obiÄan govor"
             editorDiv.innerHTML = `
-                INT. SCENA 1
+                INT. - DAY
                 
                 MARKO
                 Pozdrav svima.
@@ -173,7 +173,7 @@ describe('EditorTeksta Modul', () => {
                 I tebi pozdrav.
                 
                 GLAS IZ POZADINE
-                (šapat)
+                (Å¡apat)
                 Jeste li tu?
                 
                 MARKO
@@ -198,7 +198,7 @@ describe('EditorTeksta Modul', () => {
             `.replace(/\n/g, '<br>');
             editor = EditorTeksta(editorDiv);
             const uloge = editor.dajUloge();
-            // R2D2 ima broj. DR. HOUSE ima tačku. 
+            // R2D2 ima broj. DR. HOUSE ima taÄku. 
             // Samo PRAVA ULOGA je validna.
             assert.deepEqual(uloge, ['PRAVA ULOGA']);
         });
@@ -228,7 +228,7 @@ describe('EditorTeksta Modul', () => {
             editorDiv = setupMockDom();
         });
 
-        it('treba detektovati grešku u kucanju za kratke uloge (len <= 5, diff 1)', () => {
+        it('treba detektovati greÅ¡ku u kucanju za kratke uloge (len <= 5, diff 1)', () => {
             editorDiv.innerHTML = `
                 ANA
                 Text.
@@ -246,7 +246,7 @@ describe('EditorTeksta Modul', () => {
             assert.deepEqual(editor.pogresnaUloga(), ['ENA']);
         });
 
-        it('treba detektovati grešku u kucanju za duge uloge (len > 5, diff <= 2)', () => {
+        it('treba detektovati greÅ¡ku u kucanju za duge uloge (len > 5, diff <= 2)', () => {
             editorDiv.innerHTML = `
                 TEODORA
                 Text.
@@ -266,7 +266,7 @@ describe('EditorTeksta Modul', () => {
             assert.deepEqual(editor.pogresnaUloga(), ['TEODOR']);
         });
 
-        it('ne smije detektovati grešku ako frekvencija nije dovoljno različita', () => {
+        it('ne smije detektovati greÅ¡ku ako frekvencija nije dovoljno razliÄita', () => {
             editorDiv.innerHTML = `
                 ANA
                 Text.
@@ -291,7 +291,7 @@ describe('EditorTeksta Modul', () => {
             editorDiv = setupMockDom();
         });
 
-        it('treba brojati linije govora, ignorišući prazne i zagrade', () => {
+        it('treba brojati linije govora, ignoriÅ¡uÄ‡i prazne i zagrade', () => {
             editorDiv.innerHTML = `
                 MARKO
                 Linija jedan.
@@ -311,7 +311,7 @@ describe('EditorTeksta Modul', () => {
             assert.equal(editor.brojLinijaTeksta('MARKO'), 3);
         });
         
-        it('treba brojati liniju koja sadrži zagrade ali i tekst', () => {
+        it('treba brojati liniju koja sadrÅ¾i zagrade ali i tekst', () => {
              editorDiv.innerHTML = `
                 MARKO
                 (tiho) Ovo se racuna.
@@ -327,7 +327,7 @@ describe('EditorTeksta Modul', () => {
         let editor;
         
         const script = `
-            INT. SOBA
+            INT. - DAY
             
             ANA
             Bok.
@@ -338,7 +338,7 @@ describe('EditorTeksta Modul', () => {
             ANA
             Kako si?
             
-            EXT. VRT
+            EXT. - DAY
             
             ANA
             Lijepo vrijeme.
@@ -356,19 +356,19 @@ describe('EditorTeksta Modul', () => {
             assert.equal(res.length, 3);
             
             // Prvo pojavljivanje
-            assert.equal(res[0].scena, 'INT. SOBA');
+            assert.equal(res[0].scena, 'INT. - DAY');
             assert.equal(res[0].pozicijaUTekstu, 1);
             assert.isNull(res[0].prethodni);
             assert.equal(res[0].sljedeci.uloga, 'IVAN');
             
             // Drugo pojavljivanje
-            assert.equal(res[1].scena, 'INT. SOBA');
+            assert.equal(res[1].scena, 'INT. - DAY');
             assert.equal(res[1].pozicijaUTekstu, 3);
             assert.equal(res[1].prethodni.uloga, 'IVAN');
             
-            // Treće pojavljivanje (nova scena)
-            assert.equal(res[2].scena, 'EXT. VRT');
-            assert.equal(res[2].pozicijaUTekstu, 1); // Brojač ide od 1 jer je nova scena
+            // TreÄ‡e pojavljivanje (nova scena)
+            assert.equal(res[2].scena, 'EXT. - DAY');
+            assert.equal(res[2].pozicijaUTekstu, 1); // BrojaÄ ide od 1 jer je nova scena
             assert.isNull(res[2].prethodni); //Nema ranijeg govora u ovoj sceni
         });
     });
@@ -384,7 +384,7 @@ describe('EditorTeksta Modul', () => {
 
         it('treba grupisati uloge po scenama i segmentima (prekid na AKCIJU)', () => {
             editorDiv.innerHTML = `
-                INT. SCENA 1
+                INT. - DAY
                 
                 A
                 Text.
@@ -397,7 +397,7 @@ describe('EditorTeksta Modul', () => {
                 C
                 Text.
                 
-                INT. SCENA 2
+                INT. - NIGHT
                 
                 A
                 Text.
@@ -412,13 +412,13 @@ describe('EditorTeksta Modul', () => {
             
             assert.equal(grupe.length, 3);
             
-            assert.equal(grupe[0].scena, 'INT. SCENA 1');
+            assert.equal(grupe[0].scena, 'INT. - DAY');
             assert.deepEqual(grupe[0].uloge, ['A', 'B']);
             
-            assert.equal(grupe[1].scena, 'INT. SCENA 1');
+            assert.equal(grupe[1].scena, 'INT. - DAY');
             assert.deepEqual(grupe[1].uloge, ['C']);
             
-            assert.equal(grupe[2].scena, 'INT. SCENA 2');
+            assert.equal(grupe[2].scena, 'INT. - NIGHT');
             assert.deepEqual(grupe[2].uloge, ['A']);
         });
     });
