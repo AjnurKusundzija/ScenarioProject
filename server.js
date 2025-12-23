@@ -7,6 +7,7 @@ app.use(express.json());
 
 const dataDir = path.join(__dirname, "data");
 const dataFile = path.join(dataDir, "scenarios.json");
+const deltasFile = path.join(dataDir, "deltas.json");
 
 function ensureDataFile() {
     if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir);
@@ -24,6 +25,24 @@ function loadData() {
 
 function saveData(data) {
     fs.writeFileSync(dataFile, JSON.stringify(data, null, 2));
+}
+
+function ensureDeltasFile() {
+    if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir);
+    if (!fs.existsSync(deltasFile)) {
+        const initial = { nextDeltaId: 1, deltas: [] };
+        fs.writeFileSync(deltasFile, JSON.stringify(initial, null, 2));
+    }
+}
+
+function loadDeltas() {
+    ensureDeltasFile();
+    const raw = fs.readFileSync(deltasFile, "utf8");
+    return JSON.parse(raw);
+}
+
+function saveDeltas(data) {
+    fs.writeFileSync(deltasFile, JSON.stringify(data, null, 2));
 }
 
 app.post("/api/scenarios", (req, res) => {
@@ -114,6 +133,48 @@ app.post("/api/scenarios/:scenarioId/characters/lock", (req, res) => {
     res.status(200).json({ message: "Ime lika je uspjesno zakljucano!" });
 });
 
+app.post("/api/scenarios/:scenarioId/characters/update", (req, res) => {
+    const data = loadData();
+    const scenarioId = parseInt(req.params.scenarioId, 10);
+    const userId = req.body ? req.body.userId : null;
+    const oldName = req.body ? req.body.oldName : null;
+    const newName = req.body ? req.body.newName : null;
+
+    const scenario = data.scenarios.find(s => s.id === scenarioId);
+    if (!scenario) {
+        res.status(404).json({ message: "Scenario ne postoji!" });
+        return;
+    }
+
+    scenario.content.forEach(line => {
+        if (line && typeof line.text === "string" && line.text === oldName) {
+            line.text = newName;
+        }
+    });
+
+    if (!scenario.characterLocks) scenario.characterLocks = {};
+    if (scenario.characterLocks[oldName] !== undefined) {
+        delete scenario.characterLocks[oldName];
+    }
+
+    saveData(data);
+
+    const deltas = loadDeltas();
+    const deltaEntry = {
+        id: deltas.nextDeltaId,
+        scenarioId: scenarioId,
+        type: "char_rename",
+        userId: userId,
+        oldName: oldName,
+        newName: newName,
+        time: new Date().toISOString()
+    };
+    deltas.deltas.push(deltaEntry);
+    deltas.nextDeltaId += 1;
+    saveDeltas(deltas);
+
+    res.status(200).json({ message: "Ime lika je uspjesno promijenjeno!" });
+});
 const PORT = 3000;
 app.listen(PORT, () => {
     console.log("Server running on port " + PORT);

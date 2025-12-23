@@ -1,0 +1,41 @@
+{
+  "nextDeltaId": 5,
+  "deltas": [
+    {
+      "id": 1,
+      "scenarioId": 1,
+      "type": "char_rename",
+      "userId": 1,
+      "oldName": "ALICE",
+      "newName": "ALICIA",
+      "time": "2025-12-23T23:04:34.023Z"
+    },
+    {
+      "id": 2,
+      "scenarioId": 1,
+      "type": "char_rename",
+      "userId": 1,
+      "oldName": "ALICE",
+      "newName": "ALICIA",
+      "time": "2025-12-23T23:07:16.253Z"
+    },
+    {
+      "id": 3,
+      "scenarioId": 1,
+      "type": "char_rename",
+      "userId": 1,
+      "oldName": "ALICE",
+      "newName": "ALICIA",
+      "time": "2025-12-23T23:13:11.043Z"
+    },
+    {
+      "id": 4,
+      "scenarioId": 1,
+      "type": "char_rename",
+      "userId": 1,
+      "oldName": "ALICE",
+      "newName": "ALICIA",
+      "time": "2025-12-23T23:13:18.799Z"
+    }
+  ]
+}

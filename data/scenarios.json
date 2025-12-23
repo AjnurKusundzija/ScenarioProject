@@ -12,9 +12,7 @@
           "lockedBy": 1
         }
       ],
-      "characterLocks": {
-        "ALICE": 1
-      }
+      "characterLocks": {}
     },
     {
       "id": 2,
