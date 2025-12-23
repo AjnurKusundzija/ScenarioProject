@@ -11,7 +11,10 @@
           "text": "",
           "lockedBy": 1
         }
-      ]
+      ],
+      "characterLocks": {
+        "ALICE": 1
+      }
     },
     {
       "id": 2,

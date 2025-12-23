@@ -41,7 +41,8 @@ app.post("/api/scenarios", (req, res) => {
                 text: "",
                 lockedBy: null
             }
-        ]
+        ],
+        characterLocks: {}
     };
 
     data.scenarios.push(scenario);
@@ -85,6 +86,32 @@ app.post("/api/scenarios/:scenarioId/lines/:lineId/lock", (req, res) => {
     saveData(data);
 
     res.status(200).json({ message: "Linija je uspjesno zakljucana!" });
+});
+
+app.post("/api/scenarios/:scenarioId/characters/lock", (req, res) => {
+    const data = loadData();
+    const scenarioId = parseInt(req.params.scenarioId, 10);
+    const userId = req.body ? req.body.userId : null;
+    const characterName = req.body ? req.body.characterName : null;
+
+    const scenario = data.scenarios.find(s => s.id === scenarioId);
+    if (!scenario) {
+        res.status(404).json({ message: "Scenario ne postoji!" });
+        return;
+    }
+
+    if (!scenario.characterLocks) scenario.characterLocks = {};
+    const currentLock = scenario.characterLocks[characterName];
+
+    if (currentLock !== undefined && currentLock !== null && currentLock !== userId) {
+        res.status(409).json({ message: "Konflikt! Ime lika je vec zakljucano!" });
+        return;
+    }
+
+    scenario.characterLocks[characterName] = userId;
+    saveData(data);
+
+    res.status(200).json({ message: "Ime lika je uspjesno zakljucano!" });
 });
 
 const PORT = 3000;
