@@ -1,5 +1,5 @@
 {
-  "nextScenarioId": 3,
+  "nextScenarioId": 4,
   "scenarios": [
     {
       "id": 1,
@@ -8,7 +8,8 @@
         {
           "lineId": 1,
           "nextLineId": null,
-          "text": ""
+          "text": "",
+          "lockedBy": 1
         }
       ]
     },
@@ -20,6 +21,18 @@
           "lineId": 1,
           "nextLineId": null,
           "text": ""
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Test",
+      "content": [
+        {
+          "lineId": 1,
+          "nextLineId": null,
+          "text": "",
+          "lockedBy": null
         }
       ]
     }

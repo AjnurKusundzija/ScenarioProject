@@ -38,7 +38,8 @@ app.post("/api/scenarios", (req, res) => {
             {
                 lineId: 1,
                 nextLineId: null,
-                text: ""
+                text: "",
+                lockedBy: null
             }
         ]
     };
@@ -48,6 +49,42 @@ app.post("/api/scenarios", (req, res) => {
     saveData(data);
 
     res.status(200).json(scenario);
+});
+
+app.post("/api/scenarios/:scenarioId/lines/:lineId/lock", (req, res) => {
+    const data = loadData();
+    const scenarioId = parseInt(req.params.scenarioId, 10);
+    const lineId = parseInt(req.params.lineId, 10);
+    const userId = req.body ? req.body.userId : null;
+
+    const scenario = data.scenarios.find(s => s.id === scenarioId);
+    if (!scenario) {
+        res.status(404).json({ message: "Scenario ne postoji!" });
+        return;
+    }
+
+    const line = scenario.content.find(l => l.lineId === lineId);
+    if (!line) {
+        res.status(404).json({ message: "Linija ne postoji!" });
+        return;
+    }
+
+    if (line.lockedBy !== null && line.lockedBy !== undefined && line.lockedBy !== userId) {
+        res.status(409).json({ message: "Linija je vec zakljucana!" });
+        return;
+    }
+
+    // User can only lock one line globally, so clear previous lock(s).
+    data.scenarios.forEach(scen => {
+        scen.content.forEach(l => {
+            if (l.lockedBy === userId) l.lockedBy = null;
+        });
+    });
+
+    line.lockedBy = userId;
+    saveData(data);
+
+    res.status(200).json({ message: "Linija je uspjesno zakljucana!" });
 });
 
 const PORT = 3000;
