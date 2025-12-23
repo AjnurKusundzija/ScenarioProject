@@ -1,0 +1,26 @@
+{
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "name": "wt26p19621",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://rma_ajnurkusundzija-admin@bitbucket.org/rma_ajnurkusundzija/wt26p19621.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://bitbucket.org/rma_ajnurkusundzija/wt26p19621/issues"
+  },
+  "homepage": "https://bitbucket.org/rma_ajnurkusundzija/wt26p19621#readme"
+}
