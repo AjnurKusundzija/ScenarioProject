@@ -1,5 +1,5 @@
 {
-  "nextScenarioId": 4,
+  "nextScenarioId": 5,
   "scenarios": [
     {
       "id": 1,
@@ -8,11 +8,9 @@
         {
           "lineId": 1,
           "nextLineId": null,
-          "text": "",
-          "lockedBy": 1
+          "text": "Ovo je tekst sa vise od dvadeset rijeci da provjerimo automatsko prelamanje linije kako je trazeno u specifikaciji."
         }
-      ],
-      "characterLocks": {}
+      ]
     },
     {
       "id": 2,
@@ -32,8 +30,18 @@
         {
           "lineId": 1,
           "nextLineId": null,
-          "text": "",
-          "lockedBy": null
+          "text": ""
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Test",
+      "content": [
+        {
+          "lineId": 1,
+          "nextLineId": null,
+          "text": ""
         }
       ]
     }
