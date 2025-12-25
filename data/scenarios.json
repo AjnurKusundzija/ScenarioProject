@@ -1,5 +1,5 @@
 {
-  "nextScenarioId": 5,
+  "nextScenarioId": 7,
   "scenarios": [
     {
       "id": 1,
@@ -37,6 +37,28 @@
     {
       "id": 4,
       "title": "Test",
+      "content": [
+        {
+          "lineId": 1,
+          "nextLineId": null,
+          "text": ""
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Test scenario",
+      "content": [
+        {
+          "lineId": 1,
+          "nextLineId": null,
+          "text": ""
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Novi scenario",
       "content": [
         {
           "lineId": 1,

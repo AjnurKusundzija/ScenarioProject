@@ -509,6 +509,71 @@ app.post("/api/scenarios/:scenarioId/characters/update", async (req, res) => {
         res.status(500).json({ message: "Greska na serveru!" });
     }
 });
+
+
+function orderScenarioContent(scenario) {
+    const map = new Map();
+    const referenced = new Set();
+    scenario.content.forEach(line => {
+        map.set(line.lineId, line);
+        if (line.nextLineId !== null && line.nextLineId !== undefined) {
+            referenced.add(line.nextLineId);
+        }
+    });
+
+    const start = scenario.content.find(line => !referenced.has(line.lineId));
+    if (!start) {
+        return [...scenario.content].sort((a, b) => a.lineId - b.lineId);
+    }
+
+    const ordered = [];
+    const visited = new Set();
+    let current = start;
+    while (current && !visited.has(current.lineId)) {
+        ordered.push(current);
+        visited.add(current.lineId);
+        if (current.nextLineId === null || current.nextLineId === undefined) break;
+        current = map.get(current.nextLineId);
+    }
+
+    if (ordered.length < scenario.content.length) {
+        scenario.content
+            .filter(line => !visited.has(line.lineId))
+            .sort((a, b) => a.lineId - b.lineId)
+            .forEach(line => ordered.push(line));
+    }
+
+    return ordered;
+}
+
+app.get("/api/scenarios/:scenarioId", async (req, res) => {
+    try {
+        const { data } = await loadState();
+        const scenarioId = parseInt(req.params.scenarioId, 10);
+
+        const scenario = data.scenarios.find(s => s.id === scenarioId);
+        if (!scenario) {
+            res.status(404).json({ message: "Scenario ne postoji!" });
+            return;
+        }
+
+        const orderedContent = orderScenarioContent(scenario);
+        res.status(200).json({
+            id: scenario.id,
+            title: scenario.title,
+            content: orderedContent.map(line => ({
+                lineId: line.lineId,
+                nextLineId: line.nextLineId === undefined ? null : line.nextLineId,
+                text: line.text
+            }))
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Greska na serveru!" });
+    }
+});
+
+
 const PORT = 3000;
 app.listen(PORT, () => {
     console.log("Server running on port " + PORT);
