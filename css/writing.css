@@ -202,7 +202,7 @@ body {
   pointer-events: none;
 }
 
-/* Zelena za formatiranje */
+
 #btnBold, #btnItalic, #btnUnderline {
   background-color: #28a745;
   color: white;
@@ -211,7 +211,7 @@ body {
   background-color: #218838;
 }
 
-/* Plava za analizu */
+
 #btnBrojRijeci, #btnUloge, #btnPogresne,
 #btnLinije, #btnScenarij, #btnGrupe {
   background-color: #5B3FFF;
@@ -231,7 +231,7 @@ body {
   min-width: 180px;
 }
 
-/* Poruke ispod */
+
 .poruke-box {
   margin: 20px;
   background-color: #fff;
@@ -245,17 +245,27 @@ body {
   border-radius: 8px;
 }
 
-/* Editor toolbar */
+
+.toolbar-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 15px;
+  align-items: stretch;
+}
+
 .editor-toolbar {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 0;
   padding: 12px 20px;
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.08);
   align-items: center;
+  flex: 1 1 520px;
+  min-height: 64px;
 }
 
 .editor-toolbar button {
@@ -305,13 +315,15 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 8px 12px;
-  margin-bottom: 15px;
+  margin-bottom: 0;
   padding: 12px 20px;
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.08);
   align-items: center;
   font-family: 'Poppins', sans-serif;
+  flex: 1 1 380px;
+  min-height: 64px;
 }
 
 .ajax-controls label {
@@ -347,7 +359,7 @@ body {
   background-color: #472be8;
 }
 
-/* Poruke div */
+
 .poruke {
   margin-bottom: 15px;
   padding: 12px 20px;
@@ -362,7 +374,7 @@ body {
   box-shadow: 0 2px 5px rgba(0,0,0,0.08);
 }
 
-/* Editor polje */
+
 .editor-polje {
   min-height: 400px;
   padding: 20px;

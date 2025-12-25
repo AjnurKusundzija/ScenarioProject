@@ -57,27 +57,29 @@
     </div>
 
     <div class="desni-sadrzaj">
-      <div class="editor-toolbar">
-        <button id="btnBrojRijeci">Broj rijeci</button>
-        <button id="btnUloge">Daj uloge</button>
-        <button id="btnPogresne">Pogresne uloge</button>
-        <button id="btnGrupisi">Grupisi uloge</button>
-        <button id="btnBrojLinija">Broj linija (uloga)</button>
-        <button id="btnScenarijUloge">Scenarij uloge</button>
-        <span style="margin-left:20px"></span>
-        <button id="btnBold"><strong>B</strong></button>
-        <button id="btnItalic"><em>I</em></button>
-        <button id="btnUnderline"><u>U</u></button>
-      </div>
-      <div class="ajax-controls">
-        <label>Scenario ID <input id="inputScenarioId" type="number" min="1"></label>
-        <label>User ID <input id="inputUserId" type="number" min="1"></label>
-        <button id="btnLoadScenario" type="button">Load</button>
-        <label>Old name <input id="inputOldName" type="text"></label>
-        <label>New name <input id="inputNewName" type="text"></label>
-        <button id="btnRenameCharacter" type="button">Rename</button>
-        <label>Since <input id="inputSince" type="number" min="0" value="0"></label>
-        <button id="btnGetDeltas" type="button">Get deltas</button>
+      <div class="toolbar-row">
+        <div class="editor-toolbar">
+          <button id="btnBrojRijeci">Broj rijeci</button>
+          <button id="btnUloge">Daj uloge</button>
+          <button id="btnPogresne">Pogresne uloge</button>
+          <button id="btnGrupisi">Grupisi uloge</button>
+          <button id="btnBrojLinija">Broj linija (uloga)</button>
+          <button id="btnScenarijUloge">Scenarij uloge</button>
+          <span style="margin-left:20px"></span>
+          <button id="btnBold"><strong>B</strong></button>
+          <button id="btnItalic"><em>I</em></button>
+          <button id="btnUnderline"><u>U</u></button>
+        </div>
+        <div class="ajax-controls">
+          <label>ID scenarija <input id="inputScenarioId" type="number" min="1"></label>
+          <label>ID korisnika <input id="inputUserId" type="number" min="1"></label>
+          <button id="btnLoadScenario" type="button">Ucitaj</button>
+          <label>Staro ime <input id="inputOldName" type="text"></label>
+          <label>Novo ime <input id="inputNewName" type="text"></label>
+          <button id="btnRenameCharacter" type="button">Preimenuj</button>
+          <label>Od <input id="inputSince" type="number" min="0" value="0"></label>
+          <button id="btnGetDeltas" type="button">Dohvati promjene</button>
+        </div>
       </div>
 
       <div id="poruke" class="poruke" aria-live="polite"></div>

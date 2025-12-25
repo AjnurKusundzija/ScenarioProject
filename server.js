@@ -134,10 +134,22 @@ function orderScenarioContent(scenario) {
     return ordered;
 }
 
-function replaceAll(text, search, replacement) {
+function escapeRegExp(value) {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function hasWholeWord(text, search) {
+    if (typeof text !== "string") return false;
+    if (!search) return false;
+    const pattern = new RegExp(`\\b${escapeRegExp(search)}\\b`);
+    return pattern.test(text);
+}
+
+function replaceWholeWord(text, search, replacement) {
     if (typeof text !== "string") return text;
     if (!search) return text;
-    return text.split(search).join(replacement);
+    const pattern = new RegExp(`\\b${escapeRegExp(search)}\\b`, "g");
+    return text.replace(pattern, replacement);
 }
 
 function removeUserLineLocks(userId, keepScenarioId, keepLineId) {
@@ -376,7 +388,12 @@ app.post("/api/scenarios/:scenarioId/characters/update", async (req, res) => {
             lock.scenarioId === scenarioId && lock.characterName === oldName
         ));
 
-        if (currentLock && currentLock.userId !== userId) {
+        if (!currentLock) {
+            res.status(409).json({ message: "Ime lika nije zakljucano!" });
+            return;
+        }
+
+        if (currentLock.userId !== userId) {
             res.status(409).json({ message: "Konflikt! Ime lika je vec zakljucano!" });
             return;
         }
@@ -384,7 +401,7 @@ app.post("/api/scenarios/:scenarioId/characters/update", async (req, res) => {
         const lineConflict = scenario.content.find(line => {
             if (typeof line.text !== "string") return false;
             if (oldName === null || oldName === undefined || oldName === "") return false;
-            if (!line.text.includes(oldName)) return false;
+            if (!hasWholeWord(line.text, oldName)) return false;
             const lock = lineLocks.find(item => item.scenarioId === scenarioId && item.lineId === line.lineId);
             return lock && lock.userId !== userId;
         });
@@ -396,7 +413,7 @@ app.post("/api/scenarios/:scenarioId/characters/update", async (req, res) => {
 
         scenario.content.forEach(line => {
             if (typeof line.text === "string") {
-                line.text = replaceAll(line.text, oldName, newName);
+                line.text = replaceWholeWord(line.text, oldName, newName);
             }
         });
 

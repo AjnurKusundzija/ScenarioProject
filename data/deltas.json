@@ -41,5 +41,155 @@
     "oldName": "ALICE",
     "newName": "aLIIICA",
     "timestamp": 1766680705
+  },
+  {
+    "scenarioId": 13,
+    "type": "line_update",
+    "lineId": 1,
+    "nextLineId": null,
+    "content": "Hello ALICE and ALICE.",
+    "timestamp": 1766682471
+  },
+  {
+    "scenarioId": 13,
+    "type": "char_rename",
+    "oldName": "ALICE",
+    "newName": "ALICIA",
+    "timestamp": 1766682485
+  },
+  {
+    "scenarioId": 1,
+    "type": "line_update",
+    "lineId": 1,
+    "nextLineId": 2,
+    "content": "Ovo je tekst sa vise od dvadeset rijeci da",
+    "timestamp": 1766682657
+  },
+  {
+    "scenarioId": 1,
+    "type": "line_update",
+    "lineId": 2,
+    "nextLineId": 3,
+    "content": "provjerimo automatsko prelamanje linije kako je",
+    "timestamp": 1766682657
+  },
+  {
+    "scenarioId": 1,
+    "type": "line_update",
+    "lineId": 3,
+    "nextLineId": 4,
+    "content": "trazeno u specifikaciji.",
+    "timestamp": 1766682657
+  },
+  {
+    "scenarioId": 1,
+    "type": "line_update",
+    "lineId": 4,
+    "nextLineId": null,
+    "content": "Hajde da dodamo nesto",
+    "timestamp": 1766682657
+  },
+  {
+    "scenarioId": 12,
+    "type": "line_update",
+    "lineId": 1,
+    "nextLineId": 2,
+    "content": "Ajnur voli web tehnologije i back end.",
+    "timestamp": 1766682774
+  },
+  {
+    "scenarioId": 12,
+    "type": "line_update",
+    "lineId": 2,
+    "nextLineId": 3,
+    "content": "Emir voli inženjersku fiziku.",
+    "timestamp": 1766682774
+  },
+  {
+    "scenarioId": 12,
+    "type": "line_update",
+    "lineId": 3,
+    "nextLineId": 4,
+    "content": "Ne volimo kvizove.",
+    "timestamp": 1766682774
+  },
+  {
+    "scenarioId": 12,
+    "type": "line_update",
+    "lineId": 4,
+    "nextLineId": 5,
+    "content": "",
+    "timestamp": 1766682774
+  },
+  {
+    "scenarioId": 12,
+    "type": "line_update",
+    "lineId": 5,
+    "nextLineId": null,
+    "content": "",
+    "timestamp": 1766682774
+  },
+  {
+    "scenarioId": 12,
+    "type": "char_rename",
+    "oldName": "SAMIR",
+    "newName": "AJNUR",
+    "timestamp": 1766682802
+  },
+  {
+    "scenarioId": 12,
+    "type": "line_update",
+    "lineId": 1,
+    "nextLineId": 2,
+    "content": "Ajnur voli web tehnologije i back end.",
+    "timestamp": 1766682825
+  },
+  {
+    "scenarioId": 12,
+    "type": "line_update",
+    "lineId": 2,
+    "nextLineId": 3,
+    "content": "Emir voli inženjersku fiziku.",
+    "timestamp": 1766682825
+  },
+  {
+    "scenarioId": 12,
+    "type": "line_update",
+    "lineId": 3,
+    "nextLineId": 4,
+    "content": "Ne volimo kvizove.",
+    "timestamp": 1766682825
+  },
+  {
+    "scenarioId": 12,
+    "type": "line_update",
+    "lineId": 4,
+    "nextLineId": 5,
+    "content": "",
+    "timestamp": 1766682825
+  },
+  {
+    "scenarioId": 12,
+    "type": "line_update",
+    "lineId": 5,
+    "nextLineId": null,
+    "content": "",
+    "timestamp": 1766682825
+  },
+  {
+    "scenarioId": 1,
+    "type": "line_update",
+    "lineId": 1,
+    "nextLineId": 5,
+    "content": "Ovo je tekst sa vise od dvadeset rijeci da provjerimo automatsko prelamanje linije kako je trazeno u specifikaciji. Hajde da",
+    "timestamp": 1766682977
+  },
+  {
+    "scenarioId": 1,
+    "type": "line_update",
+    "lineId": 5,
+    "nextLineId": 2,
+    "content": "dodamo nesto dodaj",
+    "timestamp": 1766682977
   }
 ]

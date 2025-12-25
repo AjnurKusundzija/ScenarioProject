@@ -4,8 +4,28 @@
   "content": [
     {
       "lineId": 1,
+      "nextLineId": 5,
+      "text": "Ovo je tekst sa vise od dvadeset rijeci da provjerimo automatsko prelamanje linije kako je trazeno u specifikaciji. Hajde da"
+    },
+    {
+      "lineId": 2,
+      "nextLineId": 3,
+      "text": "provjerimo automatsko prelamanje linije kako je"
+    },
+    {
+      "lineId": 3,
+      "nextLineId": 4,
+      "text": "trazeno u specifikaciji."
+    },
+    {
+      "lineId": 4,
       "nextLineId": null,
-      "text": "Ovo je tekst sa vise od dvadeset rijeci da provjerimo automatsko prelamanje linije kako je trazeno u specifikaciji."
+      "text": "Hajde da dodamo nesto"
+    },
+    {
+      "lineId": 5,
+      "nextLineId": 2,
+      "text": "dodamo nesto dodaj"
     }
   ]
 }
