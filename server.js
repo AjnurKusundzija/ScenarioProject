@@ -160,6 +160,40 @@ function getNextLineId(scenario) {
     return maxId + 1;
 }
 
+function toUnixSeconds(value) {
+    if (typeof value === "number" && Number.isFinite(value)) {
+        return Math.floor(value);
+    }
+    if (typeof value === "string") {
+        const parsed = Date.parse(value);
+        if (!Number.isNaN(parsed)) {
+            return Math.floor(parsed / 1000);
+        }
+    }
+    return null;
+}
+
+function buildLineDelta(scenario, lineId, timestamp) {
+    const line = scenario.content.find(item => item.lineId === lineId);
+    if (!line) return null;
+    return {
+        type: "line_update",
+        lineId: line.lineId,
+        nextLineId: line.nextLineId === undefined ? null : line.nextLineId,
+        content: line.text,
+        timestamp: timestamp
+    };
+}
+
+function buildCharDelta(delta, timestamp) {
+    return {
+        type: "char_rename",
+        oldName: delta.oldName,
+        newName: delta.newName,
+        timestamp: timestamp
+    };
+}
+
 app.post("/api/scenarios", async (req, res) => {
     try {
         const { data } = await loadState();
@@ -283,8 +317,8 @@ app.put("/api/scenarios/:scenarioId/lines/:lineId", async (req, res) => {
         const oldNext = line.nextLineId === undefined ? null : line.nextLineId;
         line.text = wrappedLines[0] || "";
 
+        let newLineIds = [];
         if (wrappedLines.length > 1) {
-            const newLineIds = [];
             let nextId = getNextLineId(scenario);
             for (let i = 1; i < wrappedLines.length; i += 1) {
                 newLineIds.push(nextId);
@@ -312,20 +346,77 @@ app.put("/api/scenarios/:scenarioId/lines/:lineId", async (req, res) => {
         await saveLocks(locks);
 
         const deltas = await loadDeltas();
-        const deltaEntry = {
-            id: deltas.nextDeltaId,
-            scenarioId: scenarioId,
-            type: "line_update",
-            userId: userId,
-            lineId: lineId,
-            newText: wrappedLines,
-            time: Math.floor(Date.now() / 1000)
-        };
-        deltas.deltas.push(deltaEntry);
-        deltas.nextDeltaId += 1;
+        const timestamp = Math.floor(Date.now() / 1000);
+        const affectedLineIds = [lineId, ...newLineIds];
+        affectedLineIds.forEach(id => {
+            const entry = buildLineDelta(scenario, id, timestamp);
+            if (!entry) return;
+            deltas.deltas.push({
+                id: deltas.nextDeltaId,
+                scenarioId: scenarioId,
+                type: "line_update",
+                userId: userId,
+                lineId: entry.lineId,
+                nextLineId: entry.nextLineId,
+                content: entry.content,
+                time: timestamp
+            });
+            deltas.nextDeltaId += 1;
+        });
         await saveDeltas(deltas);
 
         res.status(200).json({ message: "Linija je uspjesno azurirana!" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Greska na serveru!" });
+    }
+});
+
+app.get("/api/scenarios/:scenarioId/deltas", async (req, res) => {
+    try {
+        const { data } = await loadState();
+        const scenarioId = parseInt(req.params.scenarioId, 10);
+        const sinceRaw = req.query ? req.query.since : null;
+        const since = sinceRaw === undefined || sinceRaw === null ? 0 : parseInt(sinceRaw, 10);
+
+        const scenario = data.scenarios.find(s => s.id === scenarioId);
+        if (!scenario) {
+            res.status(404).json({ message: "Scenario ne postoji!" });
+            return;
+        }
+
+        const deltas = await loadDeltas();
+        const result = [];
+
+        deltas.deltas.forEach(delta => {
+            if (delta.scenarioId !== scenarioId) return;
+            const timestamp = toUnixSeconds(delta.time);
+            if (timestamp === null) return;
+            if (timestamp <= since) return;
+
+            if (delta.type === "line_update") {
+                const entry = {
+                    type: "line_update",
+                    lineId: delta.lineId,
+                    nextLineId: delta.nextLineId,
+                    content: delta.content,
+                    timestamp: timestamp
+                };
+                if (entry.content === undefined || entry.nextLineId === undefined) {
+                    const fallback = buildLineDelta(scenario, delta.lineId, timestamp);
+                    if (fallback) {
+                        result.push(fallback);
+                    }
+                } else {
+                    result.push(entry);
+                }
+            } else if (delta.type === "char_rename") {
+                result.push(buildCharDelta(delta, timestamp));
+            }
+        });
+
+        result.sort((a, b) => a.timestamp - b.timestamp);
+        res.status(200).json({ deltas: result });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Greska na serveru!" });
@@ -406,7 +497,7 @@ app.post("/api/scenarios/:scenarioId/characters/update", async (req, res) => {
             userId: userId,
             oldName: oldName,
             newName: newName,
-            time: new Date().toISOString()
+            time: Math.floor(Date.now() / 1000)
         };
         deltas.deltas.push(deltaEntry);
         deltas.nextDeltaId += 1;
