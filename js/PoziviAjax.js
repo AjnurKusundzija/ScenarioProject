@@ -1,6 +1,6 @@
 const PoziviAjax = (function () {
     const config = (typeof window !== "undefined" && window.PoziviAjaxConfig) ? window.PoziviAjaxConfig : {};
-    const baseUrl = normalizeBase(config.baseUrl || "");
+    const baseUrl = normalizeBase(config.baseUrl || "/api");
     const scenarioPath = normalizePath(config.scenarioPath || "scenarios");
     const linePath = normalizeSegment(config.linePath || "lines");
     const characterPath = normalizeSegment(config.characterPath || "characters");
@@ -55,7 +55,7 @@ const PoziviAjax = (function () {
     }
 
     function postScenario(title, callback) {
-        request("POST", scenarioBaseUrl(), { title: title, naziv: title }, callback);
+        request("POST", scenarioBaseUrl(), { title: title }, callback);
     }
 
     function lockLine(scenarioId, lineId, userId, callback) {
@@ -69,13 +69,13 @@ const PoziviAjax = (function () {
     }
 
     function lockCharacter(scenarioId, characterName, userId, callback) {
-        const url = scenarioUrl(scenarioId) + "/" + characterPath + "/" + encodeURIComponent(characterName) + "/lock";
-        request("POST", url, { userId: userId }, callback);
+        const url = scenarioUrl(scenarioId) + "/" + characterPath + "/lock";
+        request("POST", url, { userId: userId, characterName: characterName }, callback);
     }
 
     function updateCharacter(scenarioId, userId, oldName, newName, callback) {
-        const url = scenarioUrl(scenarioId) + "/" + characterPath;
-        request("PUT", url, { userId: userId, oldName: oldName, newName: newName }, callback);
+        const url = scenarioUrl(scenarioId) + "/" + characterPath + "/update";
+        request("POST", url, { userId: userId, oldName: oldName, newName: newName }, callback);
     }
 
     function getDeltas(scenarioId, since, callback) {

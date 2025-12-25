@@ -1,38 +1,45 @@
 [
-    {
-        "scenarioId":  1,
-        "type":  "char_rename",
-        "oldName":  "ALICE",
-        "newName":  "ALICIA",
-        "timestamp":  1766534674
-    },
-    {
-        "scenarioId":  1,
-        "type":  "char_rename",
-        "oldName":  "ALICE",
-        "newName":  "ALICIA",
-        "timestamp":  1766534836
-    },
-    {
-        "scenarioId":  1,
-        "type":  "char_rename",
-        "oldName":  "ALICE",
-        "newName":  "ALICIA",
-        "timestamp":  1766535191
-    },
-    {
-        "scenarioId":  1,
-        "type":  "char_rename",
-        "oldName":  "ALICE",
-        "newName":  "ALICIA",
-        "timestamp":  1766535199
-    },
-    {
-        "scenarioId":  1,
-        "type":  "line_update",
-        "lineId":  1,
-        "nextLineId":  null,
-        "content":  "Ovo je tekst sa vise od dvadeset rijeci da provjerimo automatsko prelamanje linije kako je trazeno u specifikaciji.",
-        "timestamp":  1766676422
-    }
+  {
+    "scenarioId": 1,
+    "type": "char_rename",
+    "oldName": "ALICE",
+    "newName": "ALICIA",
+    "timestamp": 1766534674
+  },
+  {
+    "scenarioId": 1,
+    "type": "char_rename",
+    "oldName": "ALICE",
+    "newName": "ALICIA",
+    "timestamp": 1766534836
+  },
+  {
+    "scenarioId": 1,
+    "type": "char_rename",
+    "oldName": "ALICE",
+    "newName": "ALICIA",
+    "timestamp": 1766535191
+  },
+  {
+    "scenarioId": 1,
+    "type": "char_rename",
+    "oldName": "ALICE",
+    "newName": "ALICIA",
+    "timestamp": 1766535199
+  },
+  {
+    "scenarioId": 1,
+    "type": "line_update",
+    "lineId": 1,
+    "nextLineId": null,
+    "content": "Ovo je tekst sa vise od dvadeset rijeci da provjerimo automatsko prelamanje linije kako je trazeno u specifikaciji.",
+    "timestamp": 1766676422
+  },
+  {
+    "scenarioId": 1,
+    "type": "char_rename",
+    "oldName": "ALICE",
+    "newName": "aLIIICA",
+    "timestamp": 1766680705
+  }
 ]

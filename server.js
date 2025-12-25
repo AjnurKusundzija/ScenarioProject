@@ -5,6 +5,9 @@ const path = require("path");
 
 const app = express();
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "html")));
+app.use("/css", express.static(path.join(__dirname, "css")));
+app.use("/js", express.static(path.join(__dirname, "js")));
 
 const dataDir = path.join(__dirname, "data");
 const scenariosDir = path.join(dataDir, "scenarios");
@@ -375,6 +378,19 @@ app.post("/api/scenarios/:scenarioId/characters/update", async (req, res) => {
 
         if (currentLock && currentLock.userId !== userId) {
             res.status(409).json({ message: "Konflikt! Ime lika je vec zakljucano!" });
+            return;
+        }
+
+        const lineConflict = scenario.content.find(line => {
+            if (typeof line.text !== "string") return false;
+            if (oldName === null || oldName === undefined || oldName === "") return false;
+            if (!line.text.includes(oldName)) return false;
+            const lock = lineLocks.find(item => item.scenarioId === scenarioId && item.lineId === line.lineId);
+            return lock && lock.userId !== userId;
+        });
+
+        if (lineConflict) {
+            res.status(409).json({ message: "Linija je vec zakljucana!" });
             return;
         }
 

@@ -1,9 +1,23 @@
 document.addEventListener('DOMContentLoaded', function () {
     let div = document.getElementById('divEditor');
     let poruke = document.getElementById('poruke');
+    const inputScenarioId = document.getElementById('inputScenarioId');
+    const inputUserId = document.getElementById('inputUserId');
+    const inputOldName = document.getElementById('inputOldName');
+    const inputNewName = document.getElementById('inputNewName');
+    const inputSince = document.getElementById('inputSince');
+    const btnLoadScenario = document.getElementById('btnLoadScenario');
+    const btnRenameCharacter = document.getElementById('btnRenameCharacter');
+    const btnGetDeltas = document.getElementById('btnGetDeltas');
     
     function show(msg) {
         poruke.textContent = msg;
+    }
+
+    function normalizeId(value) {
+        if (value === null || value === undefined) return null;
+        const parsed = parseInt(value, 10);
+        return Number.isFinite(parsed) ? parsed : null;
     }
 
     function formatGrupa(grupa) {
@@ -50,6 +64,13 @@ document.addEventListener('DOMContentLoaded', function () {
         if (typeof data.text === 'string') return data.text;
         if (typeof data.content === 'string') return data.content;
         if (typeof data.tekst === 'string') return data.tekst;
+        if (Array.isArray(data.content)) {
+            return data.content.map(function (line) {
+                if (typeof line === 'string') return line;
+                if (line && typeof line.text === 'string') return line.text;
+                return '';
+            }).join('\n');
+        }
         const lines = data.lines || data.linije;
         if (Array.isArray(lines)) {
             return lines.map(function (line) {
@@ -95,12 +116,42 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const pageConfig = readPageConfig();
-    let scenarioId = pageConfig.scenarioId;
-    const userId = pageConfig.userId || 'guest';
+    let scenarioId = normalizeId(pageConfig.scenarioId);
+    let userId = normalizeId(pageConfig.userId) || 1;
+
+    if (inputScenarioId && scenarioId) inputScenarioId.value = scenarioId;
+    if (inputUserId) inputUserId.value = userId;
+
+    function readScenarioId() {
+        if (inputScenarioId && inputScenarioId.value !== '') {
+            return normalizeId(inputScenarioId.value);
+        }
+        return normalizeId(scenarioId);
+    }
+
+    function readUserId() {
+        if (inputUserId && inputUserId.value !== '') {
+            const parsed = normalizeId(inputUserId.value);
+            if (parsed !== null) return parsed;
+        }
+        return normalizeId(userId) || 1;
+    }
+
+    function setScenarioId(id) {
+        scenarioId = id;
+        if (inputScenarioId) inputScenarioId.value = id;
+    }
+
+    function setUserId(id) {
+        userId = id;
+        if (inputUserId) inputUserId.value = id;
+    }
 
     function loadScenario() {
-        if (!ajaxAvailable || !scenarioId) return;
-        PoziviAjax.getScenario(scenarioId, function (status, data) {
+        const currentScenarioId = readScenarioId();
+        if (!ajaxAvailable || !currentScenarioId) return;
+        setScenarioId(currentScenarioId);
+        PoziviAjax.getScenario(currentScenarioId, function (status, data) {
             if (status >= 200 && status < 300) {
                 applyScenarioResponse(data);
             } else {
@@ -109,42 +160,70 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    function lockAndUpdateLine(lineId, text, done) {
+    function lockAndUpdateLine(lineId, newText, done) {
         if (!ajaxAvailable) {
             done(0, null);
             return;
         }
-        PoziviAjax.lockLine(scenarioId, lineId, userId, function (status, data) {
+        const currentScenarioId = readScenarioId();
+        const currentUserId = readUserId();
+        if (!currentScenarioId) {
+            done(0, null);
+            return;
+        }
+        setScenarioId(currentScenarioId);
+        setUserId(currentUserId);
+        PoziviAjax.lockLine(currentScenarioId, lineId, currentUserId, function (status, data) {
             if (status >= 200 && status < 300) {
-                PoziviAjax.updateLine(scenarioId, lineId, userId, text, done);
-                return;
-            }
-            if (status === 404 || status === 405) {
-                PoziviAjax.updateLine(scenarioId, lineId, userId, text, done);
+                PoziviAjax.updateLine(currentScenarioId, lineId, currentUserId, newText, done);
                 return;
             }
             done(status, data);
         });
     }
 
-    function saveLines(lines) {
+    function saveLines(lines, scenario) {
         if (!lines.length) {
             show('Nothing to save.');
             return;
         }
+        if (!scenario || !Array.isArray(scenario.content) || !scenario.content.length) {
+            show('Scenario content missing.');
+            return;
+        }
+
+        const ordered = scenario.content;
+        const existingCount = ordered.length;
+        const newCount = lines.length;
+        const minCount = Math.min(existingCount, newCount);
+        if (minCount <= 0) {
+            show('Nothing to save.');
+            return;
+        }
+
+        const updates = [];
+        for (let i = 0; i < minCount - 1; i += 1) {
+            updates.push({ lineId: ordered[i].lineId, payload: [lines[i]] });
+        }
+
+        const lastIndex = minCount - 1;
+        const extras = newCount > existingCount ? lines.slice(existingCount) : [];
+        const payload = [lines[lastIndex] || ""].concat(extras);
+        updates.push({ lineId: ordered[lastIndex].lineId, payload: payload });
+
         let index = 0;
         function next() {
-            if (index >= lines.length) {
-                show('Saved ' + lines.length + ' lines.');
+            if (index >= updates.length) {
+                show('Saved ' + updates.length + ' line(s).');
                 return;
             }
-            const lineId = index + 1;
-            lockAndUpdateLine(lineId, lines[index], function (status) {
+            const update = updates[index];
+            lockAndUpdateLine(update.lineId, update.payload, function (status) {
                 if (status >= 200 && status < 300) {
                     index++;
                     next();
                 } else {
-                    show('Save failed for line ' + lineId + ' (status ' + status + ').');
+                    show('Save failed for line ' + update.lineId + ' (status ' + status + ').');
                 }
             });
         }
@@ -164,22 +243,33 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         const raw = getEditorText();
         const lines = raw ? raw.split('\n') : [];
-        if (!scenarioId) {
+        const currentScenarioId = readScenarioId();
+        const currentUserId = readUserId();
+        setUserId(currentUserId);
+        if (!currentScenarioId) {
             PoziviAjax.postScenario(getScenarioTitle(), function (status, data) {
                 if (status >= 200 && status < 300) {
-                    scenarioId = extractScenarioId(data);
-                    if (!scenarioId) {
+                    const newScenarioId = extractScenarioId(data);
+                    if (!newScenarioId) {
                         show('Scenario created but no id returned.');
                         return;
                     }
-                    saveLines(lines);
+                    setScenarioId(newScenarioId);
+                    saveLines(lines, data);
                 } else {
                     show('Scenario create failed (status ' + status + ').');
                 }
             });
             return;
         }
-        saveLines(lines);
+        setScenarioId(currentScenarioId);
+        PoziviAjax.getScenario(currentScenarioId, function (status, data) {
+            if (status >= 200 && status < 300) {
+                saveLines(lines, data);
+            } else {
+                show('Scenario load failed (status ' + status + ').');
+            }
+        });
     }
 
     loadScenario();
@@ -187,6 +277,71 @@ document.addEventListener('DOMContentLoaded', function () {
     const saveButton = document.querySelector('.dugme-spasi');
     if (saveButton) {
         saveButton.addEventListener('click', saveScenario);
+    }
+
+    if (btnLoadScenario) {
+        btnLoadScenario.addEventListener('click', function () {
+            const currentScenarioId = readScenarioId();
+            if (!currentScenarioId) {
+                show('Scenario id missing.');
+                return;
+            }
+            setScenarioId(currentScenarioId);
+            setUserId(readUserId());
+            loadScenario();
+        });
+    }
+
+    if (btnRenameCharacter) {
+        btnRenameCharacter.addEventListener('click', function () {
+            const currentScenarioId = readScenarioId();
+            const currentUserId = readUserId();
+            const oldName = inputOldName ? inputOldName.value.trim() : '';
+            const newName = inputNewName ? inputNewName.value.trim() : '';
+            if (!currentScenarioId) {
+                show('Scenario id missing.');
+                return;
+            }
+            if (!oldName || !newName) {
+                show('Old name and new name are required.');
+                return;
+            }
+            setScenarioId(currentScenarioId);
+            setUserId(currentUserId);
+            PoziviAjax.lockCharacter(currentScenarioId, oldName, currentUserId, function (status, data) {
+                if (status >= 200 && status < 300) {
+                    PoziviAjax.updateCharacter(currentScenarioId, currentUserId, oldName, newName, function (statusUpdate, dataUpdate) {
+                        if (statusUpdate >= 200 && statusUpdate < 300) {
+                            show((dataUpdate && dataUpdate.message) ? dataUpdate.message : 'Character updated.');
+                        } else {
+                            show((dataUpdate && dataUpdate.message) ? dataUpdate.message : ('Update failed (status ' + statusUpdate + ').'));
+                        }
+                    });
+                } else {
+                    show((data && data.message) ? data.message : ('Lock failed (status ' + status + ').'));
+                }
+            });
+        });
+    }
+
+    if (btnGetDeltas) {
+        btnGetDeltas.addEventListener('click', function () {
+            const currentScenarioId = readScenarioId();
+            if (!currentScenarioId) {
+                show('Scenario id missing.');
+                return;
+            }
+            const sinceRaw = inputSince ? inputSince.value : '';
+            const since = normalizeId(sinceRaw) || 0;
+            setScenarioId(currentScenarioId);
+            PoziviAjax.getDeltas(currentScenarioId, since, function (status, data) {
+                if (status >= 200 && status < 300) {
+                    show(JSON.stringify(data, null, 2));
+                } else {
+                    show((data && data.message) ? data.message : ('Deltas failed (status ' + status + ').'));
+                }
+            });
+        });
     }
 
     document.getElementById('btnBrojRijeci').addEventListener('click', function () {

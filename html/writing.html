@@ -69,6 +69,16 @@
         <button id="btnItalic"><em>I</em></button>
         <button id="btnUnderline"><u>U</u></button>
       </div>
+      <div class="ajax-controls">
+        <label>Scenario ID <input id="inputScenarioId" type="number" min="1"></label>
+        <label>User ID <input id="inputUserId" type="number" min="1"></label>
+        <button id="btnLoadScenario" type="button">Load</button>
+        <label>Old name <input id="inputOldName" type="text"></label>
+        <label>New name <input id="inputNewName" type="text"></label>
+        <button id="btnRenameCharacter" type="button">Rename</button>
+        <label>Since <input id="inputSince" type="number" min="0" value="0"></label>
+        <button id="btnGetDeltas" type="button">Get deltas</button>
+      </div>
 
       <div id="poruke" class="poruke" aria-live="polite"></div>
 

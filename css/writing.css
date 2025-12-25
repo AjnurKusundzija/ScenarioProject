@@ -301,6 +301,52 @@ body {
   background-color: #472be8;
 }
 
+.ajax-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-bottom: 15px;
+  padding: 12px 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
+}
+
+.ajax-controls label {
+  font-size: 12px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ajax-controls input {
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 12px;
+  min-width: 90px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.ajax-controls button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  background-color: #5B3FFF;
+  color: #fff;
+  transition: background-color 0.2s ease;
+  font-weight: 500;
+}
+
+.ajax-controls button:hover {
+  background-color: #472be8;
+}
+
 /* Poruke div */
 .poruke {
   margin-bottom: 15px;
