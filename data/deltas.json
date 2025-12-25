@@ -1,52 +1,38 @@
-{
-  "nextDeltaId": 6,
-  "deltas": [
+[
     {
-      "id": 1,
-      "scenarioId": 1,
-      "type": "char_rename",
-      "userId": 1,
-      "oldName": "ALICE",
-      "newName": "ALICIA",
-      "time": "2025-12-23T23:04:34.023Z"
+        "scenarioId":  1,
+        "type":  "char_rename",
+        "oldName":  "ALICE",
+        "newName":  "ALICIA",
+        "timestamp":  1766534674
     },
     {
-      "id": 2,
-      "scenarioId": 1,
-      "type": "char_rename",
-      "userId": 1,
-      "oldName": "ALICE",
-      "newName": "ALICIA",
-      "time": "2025-12-23T23:07:16.253Z"
+        "scenarioId":  1,
+        "type":  "char_rename",
+        "oldName":  "ALICE",
+        "newName":  "ALICIA",
+        "timestamp":  1766534836
     },
     {
-      "id": 3,
-      "scenarioId": 1,
-      "type": "char_rename",
-      "userId": 1,
-      "oldName": "ALICE",
-      "newName": "ALICIA",
-      "time": "2025-12-23T23:13:11.043Z"
+        "scenarioId":  1,
+        "type":  "char_rename",
+        "oldName":  "ALICE",
+        "newName":  "ALICIA",
+        "timestamp":  1766535191
     },
     {
-      "id": 4,
-      "scenarioId": 1,
-      "type": "char_rename",
-      "userId": 1,
-      "oldName": "ALICE",
-      "newName": "ALICIA",
-      "time": "2025-12-23T23:13:18.799Z"
+        "scenarioId":  1,
+        "type":  "char_rename",
+        "oldName":  "ALICE",
+        "newName":  "ALICIA",
+        "timestamp":  1766535199
     },
     {
-      "id": 5,
-      "scenarioId": 1,
-      "type": "line_update",
-      "userId": 1,
-      "lineId": 1,
-      "newText": [
-        "Ovo je tekst sa vise od dvadeset rijeci da provjerimo automatsko prelamanje linije kako je trazeno u specifikaciji."
-      ],
-      "time": 1766676422
+        "scenarioId":  1,
+        "type":  "line_update",
+        "lineId":  1,
+        "nextLineId":  null,
+        "content":  "Ovo je tekst sa vise od dvadeset rijeci da provjerimo automatsko prelamanje linije kako je trazeno u specifikaciji.",
+        "timestamp":  1766676422
     }
-  ]
-}
+]
