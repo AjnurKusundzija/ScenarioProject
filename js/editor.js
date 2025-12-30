@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const params = window.URLSearchParams ? new URLSearchParams(window.location.search) : null;
         const scenarioId = (root && root.getAttribute('data-scenario-id')) || (params ? params.get('scenarioId') : null);
         const userId = (root && root.getAttribute('data-user-id')) || (params ? params.get('userId') : null);
-        return {
+         return {
             scenarioId: scenarioId ? scenarioId.trim() : null,
             userId: userId ? userId.trim() : null
         };
@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (status >= 200 && status < 300) {
                 applyScenarioResponse(data);
             } else {
-                show('Scenario load failed (status ' + status + ').');
+                show('Neuspješno učitavanje scenarija (status ' + status + ').');
             }
         });
     }
@@ -184,11 +184,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function saveLines(lines, scenario) {
         if (!lines.length) {
-            show('Nothing to save.');
+            show('Nema ništa za spremanje.');
             return;
         }
         if (!scenario || !Array.isArray(scenario.content) || !scenario.content.length) {
-            show('Scenario content missing.');
+            show('Nedostaje sadržaj scenarija (odgovor backenda).');
             return;
         }
 
@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const newCount = lines.length;
         const minCount = Math.min(existingCount, newCount);
         if (minCount <= 0) {
-            show('Nothing to save.');
+            show('Nema ništa za spremanje.');
             return;
         }
 
@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let index = 0;
         function next() {
             if (index >= updates.length) {
-                show('Saved ' + updates.length + ' line(s).');
+                show('Spremljeno ' + updates.length + ' linija.');
                 return;
             }
             const update = updates[index];
@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     index++;
                     next();
                 } else {
-                    show('Save failed for line ' + update.lineId + ' (status ' + status + ').');
+                    show('Neuspješno spremanje linije ' + update.lineId + ' (status ' + status + ').');
                 }
             });
         }
@@ -233,12 +233,12 @@ document.addEventListener('DOMContentLoaded', function () {
     function getScenarioTitle() {
         const titleEl = document.querySelector('.naslov-projekta');
         const raw = titleEl ? titleEl.textContent : '';
-        return raw ? raw.trim() : 'Scenario';
+        return raw ? raw.trim() : 'Scenarij';
     }
 
     function saveScenario() {
         if (!ajaxAvailable) {
-            show('PoziviAjax module is missing.');
+            show('PoziviAjax modul nije dostupan (frontend nije povezan s backendom).');
             return;
         }
         const raw = getEditorText();
@@ -251,13 +251,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (status >= 200 && status < 300) {
                     const newScenarioId = extractScenarioId(data);
                     if (!newScenarioId) {
-                        show('Scenario created but no id returned.');
+                        show('Scenarij je kreiran, ali ID nije vraćen.');
                         return;
                     }
                     setScenarioId(newScenarioId);
                     saveLines(lines, data);
                 } else {
-                    show('Scenario create failed (status ' + status + ').');
+                    show('Neuspješno kreiranje scenarija (status ' + status + ').');
                 }
             });
             return;
@@ -267,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (status >= 200 && status < 300) {
                 saveLines(lines, data);
             } else {
-                show('Scenario load failed (status ' + status + ').');
+                show('Neuspješno učitavanje scenarija (status ' + status + ').');
             }
         });
     }
@@ -283,7 +283,7 @@ document.addEventListener('DOMContentLoaded', function () {
         btnLoadScenario.addEventListener('click', function () {
             const currentScenarioId = readScenarioId();
             if (!currentScenarioId) {
-                show('Scenario id missing.');
+                show('ID scenarija nije unesen.');
                 return;
             }
             setScenarioId(currentScenarioId);
@@ -299,11 +299,11 @@ document.addEventListener('DOMContentLoaded', function () {
             const oldName = inputOldName ? inputOldName.value.trim() : '';
             const newName = inputNewName ? inputNewName.value.trim() : '';
             if (!currentScenarioId) {
-                show('Scenario id missing.');
+                show('ID scenarija nije unesen.');
                 return;
             }
             if (!oldName || !newName) {
-                show('Old name and new name are required.');
+                show('Staro i novo ime su obavezni.');
                 return;
             }
             setScenarioId(currentScenarioId);
@@ -312,13 +312,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (status >= 200 && status < 300) {
                     PoziviAjax.updateCharacter(currentScenarioId, currentUserId, oldName, newName, function (statusUpdate, dataUpdate) {
                         if (statusUpdate >= 200 && statusUpdate < 300) {
-                            show((dataUpdate && dataUpdate.message) ? dataUpdate.message : 'Character updated.');
+                            show((dataUpdate && dataUpdate.message) ? dataUpdate.message : 'Lik je uspješno ažuriran.');
                         } else {
-                            show((dataUpdate && dataUpdate.message) ? dataUpdate.message : ('Update failed (status ' + statusUpdate + ').'));
+                            show((dataUpdate && dataUpdate.message) ? dataUpdate.message : ('Neuspješno ažuriranje (status ' + statusUpdate + ').'));
                         }
                     });
                 } else {
-                    show((data && data.message) ? data.message : ('Lock failed (status ' + status + ').'));
+                    show((data && data.message) ? data.message : ('Neuspješno zaključavanje (status ' + status + ').'));
                 }
             });
         });
@@ -328,7 +328,7 @@ document.addEventListener('DOMContentLoaded', function () {
         btnGetDeltas.addEventListener('click', function () {
             const currentScenarioId = readScenarioId();
             if (!currentScenarioId) {
-                show('Scenario id missing.');
+                show('ID scenarija nije unesen.');
                 return;
             }
             const sinceRaw = inputSince ? inputSince.value : '';
@@ -338,7 +338,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (status >= 200 && status < 300) {
                     show(JSON.stringify(data, null, 2));
                 } else {
-                    show((data && data.message) ? data.message : ('Deltas failed (status ' + status + ').'));
+                    show((data && data.message) ? data.message : ('Neuspješno dohvaćanje promjena (status ' + status + ').'));
                 }
             });
         });

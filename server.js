@@ -384,33 +384,6 @@ app.post("/api/scenarios/:scenarioId/characters/update", async (req, res) => {
             return;
         }
 
-        const currentLock = characterLocks.find(lock => (
-            lock.scenarioId === scenarioId && lock.characterName === oldName
-        ));
-
-        if (!currentLock) {
-            res.status(409).json({ message: "Ime lika nije zakljucano!" });
-            return;
-        }
-
-        if (currentLock.userId !== userId) {
-            res.status(409).json({ message: "Konflikt! Ime lika je vec zakljucano!" });
-            return;
-        }
-
-        const lineConflict = scenario.content.find(line => {
-            if (typeof line.text !== "string") return false;
-            if (oldName === null || oldName === undefined || oldName === "") return false;
-            if (!hasWholeWord(line.text, oldName)) return false;
-            const lock = lineLocks.find(item => item.scenarioId === scenarioId && item.lineId === line.lineId);
-            return lock && lock.userId !== userId;
-        });
-
-        if (lineConflict) {
-            res.status(409).json({ message: "Linija je vec zakljucana!" });
-            return;
-        }
-
         scenario.content.forEach(line => {
             if (typeof line.text === "string") {
                 line.text = replaceWholeWord(line.text, oldName, newName);
@@ -513,4 +486,5 @@ app.get("/api/scenarios/:scenarioId", async (req, res) => {
 const PORT = 3000;
 app.listen(PORT, () => {
     console.log("Server radi na portu " + PORT);
+    console.log("URL: http://localhost:" + PORT + "/writing.html");
 });

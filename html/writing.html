@@ -71,14 +71,34 @@
           <button id="btnUnderline"><u>U</u></button>
         </div>
         <div class="ajax-controls">
-          <label>ID scenarija <input id="inputScenarioId" type="number" min="1"></label>
-          <label>ID korisnika <input id="inputUserId" type="number" min="1"></label>
-          <button id="btnLoadScenario" type="button">Ucitaj</button>
-          <label>Staro ime <input id="inputOldName" type="text"></label>
-          <label>Novo ime <input id="inputNewName" type="text"></label>
-          <button id="btnRenameCharacter" type="button">Preimenuj</button>
-          <label>Od <input id="inputSince" type="number" min="0" value="0"></label>
-          <button id="btnGetDeltas" type="button">Dohvati promjene</button>
+          <div class="ajax-row">
+            <div class="ajax-field">
+              <label for="inputScenarioId">ID scenarija</label>
+              <input id="inputScenarioId" type="number" min="1">
+            </div>
+            <div class="ajax-field">
+              <label for="inputUserId">ID korisnika</label>
+              <input id="inputUserId" type="number" min="1">
+            </div>
+            <button id="btnLoadScenario" type="button">Ucitaj</button>
+            <div class="ajax-field">
+              <label for="inputOldName">Staro ime</label>
+              <input id="inputOldName" type="text">
+            </div>
+          </div>
+
+          <div class="ajax-row">
+            <div class="ajax-field">
+              <label for="inputNewName">Novo ime</label>
+              <input id="inputNewName" type="text">
+            </div>
+            <button id="btnRenameCharacter" type="button">Preimenuj</button>
+            <div class="ajax-field">
+              <label for="inputSince">Od</label>
+              <input id="inputSince" type="number" min="0" value="0">
+            </div>
+            <button id="btnGetDeltas" type="button">Dohvati promjene</button>
+          </div>
         </div>
       </div>
 
