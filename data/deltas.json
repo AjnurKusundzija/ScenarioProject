@@ -1,315 +1,150 @@
 [
   {
     "scenarioId": 1,
-    "type": "char_rename",
-    "oldName": "ALICE",
-    "newName": "ALICIA",
-    "timestamp": 1766534674
-  },
-  {
-    "scenarioId": 1,
-    "type": "char_rename",
-    "oldName": "ALICE",
-    "newName": "ALICIA",
-    "timestamp": 1766534836
-  },
-  {
-    "scenarioId": 1,
-    "type": "char_rename",
-    "oldName": "ALICE",
-    "newName": "ALICIA",
-    "timestamp": 1766535191
-  },
-  {
-    "scenarioId": 1,
-    "type": "char_rename",
-    "oldName": "ALICE",
-    "newName": "ALICIA",
-    "timestamp": 1766535199
-  },
-  {
-    "scenarioId": 1,
-    "type": "line_update",
-    "lineId": 1,
-    "nextLineId": null,
-    "content": "Ovo je tekst sa vise od dvadeset rijeci da provjerimo automatsko prelamanje linije kako je trazeno u specifikaciji.",
-    "timestamp": 1766676422
-  },
-  {
-    "scenarioId": 1,
-    "type": "char_rename",
-    "oldName": "ALICE",
-    "newName": "aLIIICA",
-    "timestamp": 1766680705
-  },
-  {
-    "scenarioId": 13,
-    "type": "line_update",
-    "lineId": 1,
-    "nextLineId": null,
-    "content": "Hello ALICE and ALICE.",
-    "timestamp": 1766682471
-  },
-  {
-    "scenarioId": 13,
-    "type": "char_rename",
-    "oldName": "ALICE",
-    "newName": "ALICIA",
-    "timestamp": 1766682485
-  },
-  {
-    "scenarioId": 1,
     "type": "line_update",
     "lineId": 1,
     "nextLineId": 2,
-    "content": "Ovo je tekst sa vise od dvadeset rijeci da",
-    "timestamp": 1766682657
+    "content": "NARATOR: Sunce je polako zalazilo nad starim gradom.",
+    "timestamp": 1736520000
   },
   {
     "scenarioId": 1,
     "type": "line_update",
     "lineId": 2,
     "nextLineId": 3,
-    "content": "provjerimo automatsko prelamanje linije kako je",
-    "timestamp": 1766682657
+    "content": "ALICE: Jesi li siguran da je ključ ostao u biblioteci?",
+    "timestamp": 1736520010
   },
   {
     "scenarioId": 1,
     "type": "line_update",
     "lineId": 3,
     "nextLineId": 4,
-    "content": "trazeno u specifikaciji.",
-    "timestamp": 1766682657
+    "content": "BOB: To je posljednje mjesto gdje sam ga vidio prije nego što je pala noć.",
+    "timestamp": 1736520020
   },
   {
     "scenarioId": 1,
     "type": "line_update",
     "lineId": 4,
-    "nextLineId": null,
-    "content": "Hajde da dodamo nesto",
-    "timestamp": 1766682657
-  },
-  {
-    "scenarioId": 12,
-    "type": "line_update",
-    "lineId": 1,
-    "nextLineId": 2,
-    "content": "Ajnur voli web tehnologije i back end.",
-    "timestamp": 1766682774
-  },
-  {
-    "scenarioId": 12,
-    "type": "line_update",
-    "lineId": 2,
-    "nextLineId": 3,
-    "content": "Emir voli inženjersku fiziku.",
-    "timestamp": 1766682774
-  },
-  {
-    "scenarioId": 12,
-    "type": "line_update",
-    "lineId": 3,
-    "nextLineId": 4,
-    "content": "Ne volimo kvizove.",
-    "timestamp": 1766682774
-  },
-  {
-    "scenarioId": 12,
-    "type": "line_update",
-    "lineId": 4,
     "nextLineId": 5,
-    "content": "",
-    "timestamp": 1766682774
-  },
-  {
-    "scenarioId": 12,
-    "type": "line_update",
-    "lineId": 5,
-    "nextLineId": null,
-    "content": "",
-    "timestamp": 1766682774
-  },
-  {
-    "scenarioId": 12,
-    "type": "char_rename",
-    "oldName": "SAMIR",
-    "newName": "AJNUR",
-    "timestamp": 1766682802
-  },
-  {
-    "scenarioId": 12,
-    "type": "line_update",
-    "lineId": 1,
-    "nextLineId": 2,
-    "content": "Ajnur voli web tehnologije i back end.",
-    "timestamp": 1766682825
-  },
-  {
-    "scenarioId": 12,
-    "type": "line_update",
-    "lineId": 2,
-    "nextLineId": 3,
-    "content": "Emir voli inženjersku fiziku.",
-    "timestamp": 1766682825
-  },
-  {
-    "scenarioId": 12,
-    "type": "line_update",
-    "lineId": 3,
-    "nextLineId": 4,
-    "content": "Ne volimo kvizove.",
-    "timestamp": 1766682825
-  },
-  {
-    "scenarioId": 12,
-    "type": "line_update",
-    "lineId": 4,
-    "nextLineId": 5,
-    "content": "",
-    "timestamp": 1766682825
-  },
-  {
-    "scenarioId": 12,
-    "type": "line_update",
-    "lineId": 5,
-    "nextLineId": null,
-    "content": "",
-    "timestamp": 1766682825
+    "content": "ALICE: Moramo požuriti prije nego što čuvar zaključa glavna vrata.",
+    "timestamp": 1736520030
   },
   {
     "scenarioId": 1,
-    "type": "line_update",
-    "lineId": 1,
-    "nextLineId": 5,
-    "content": "Ovo je tekst sa vise od dvadeset rijeci da provjerimo automatsko prelamanje linije kako je trazeno u specifikaciji. Hajde da",
-    "timestamp": 1766682977
-  },
-  {
-    "scenarioId": 1,
-    "type": "line_update",
-    "lineId": 5,
-    "nextLineId": 2,
-    "content": "dodamo nesto dodaj",
-    "timestamp": 1766682977
-  },
-  {
-    "scenarioId": 14,
-    "type": "line_update",
-    "lineId": 1,
-    "nextLineId": 2,
-    "content": "NAIDA",
-    "timestamp": 1767134305
-  },
-  {
-    "scenarioId": 14,
-    "type": "line_update",
-    "lineId": 2,
-    "nextLineId": 3,
-    "content": "Mislis li da se sve ovo moglo zavrsiti drugacije?",
-    "timestamp": 1767134305
-  },
-  {
-    "scenarioId": 14,
-    "type": "line_update",
-    "lineId": 3,
-    "nextLineId": 4,
-    "content": "",
-    "timestamp": 1767134305
-  },
-  {
-    "scenarioId": 14,
-    "type": "line_update",
-    "lineId": 4,
-    "nextLineId": 5,
-    "content": "",
-    "timestamp": 1767134305
-  },
-  {
-    "scenarioId": 14,
     "type": "line_update",
     "lineId": 5,
     "nextLineId": 6,
-    "content": "DINO",
-    "timestamp": 1767134305
+    "content": "BOB: Čekaj, čuješ li taj zvuk iza polica?",
+    "timestamp": 1736520040
   },
   {
-    "scenarioId": 14,
+    "scenarioId": 1,
     "type": "line_update",
     "lineId": 6,
     "nextLineId": null,
-    "content": "Mozda... ali onda ne bismo bili ovdje.",
-    "timestamp": 1767134305
+    "content": "NARATOR: Iz sjene se polako pojavila nepoznata figura.",
+    "timestamp": 1736520050
   },
   {
-    "scenarioId": 14,
-    "type": "line_update",
-    "lineId": 1,
-    "nextLineId": 2,
-    "content": "NAIDA",
-    "timestamp": 1767134322
+    "scenarioId": 1,
+    "type": "char_rename",
+    "oldName": "BOB",
+    "newName": "ROBERT",
+    "timestamp": 1736520100
   },
   {
-    "scenarioId": 14,
-    "type": "line_update",
-    "lineId": 2,
-    "nextLineId": 3,
-    "content": "Mislis li da se sve ovo moglo zavrsiti drugacije?",
-    "timestamp": 1767134322
-  },
-  {
-    "scenarioId": 14,
+    "scenarioId": 1,
     "type": "line_update",
     "lineId": 3,
-    "nextLineId": 4,
-    "content": "",
-    "timestamp": 1767134322
-  },
-  {
-    "scenarioId": 14,
-    "type": "line_update",
-    "lineId": 4,
-    "nextLineId": 5,
-    "content": "",
-    "timestamp": 1767134322
-  },
-  {
-    "scenarioId": 14,
-    "type": "line_update",
-    "lineId": 5,
-    "nextLineId": 6,
-    "content": "DINO",
-    "timestamp": 1767134322
-  },
-  {
-    "scenarioId": 14,
-    "type": "line_update",
-    "lineId": 6,
     "nextLineId": 7,
-    "content": "Mozda... ali onda ne bismo bili ovdje.",
-    "timestamp": 1767134322
+    "content": "riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ",
+    "timestamp": 1768139753
   },
   {
-    "scenarioId": 14,
+    "scenarioId": 1,
     "type": "line_update",
     "lineId": 7,
     "nextLineId": 8,
-    "content": "",
-    "timestamp": 1767134322
+    "content": "riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ",
+    "timestamp": 1768139753
   },
   {
-    "scenarioId": 14,
+    "scenarioId": 1,
     "type": "line_update",
     "lineId": 8,
-    "nextLineId": 9,
-    "content": "",
-    "timestamp": 1767134322
+    "nextLineId": 4,
+    "content": "riječ riječ riječ riječ riječ",
+    "timestamp": 1768139753
   },
   {
-    "scenarioId": 14,
+    "scenarioId": 1,
+    "type": "char_rename",
+    "oldName": "ALICE",
+    "newName": "ALICIA",
+    "timestamp": 1768139753
+  },
+  {
+    "scenarioId": 1,
+    "type": "line_update",
+    "lineId": 3,
+    "nextLineId": 9,
+    "content": "riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ",
+    "timestamp": 1768140053
+  },
+  {
+    "scenarioId": 1,
     "type": "line_update",
     "lineId": 9,
-    "nextLineId": null,
-    "content": "adadadd a",
-    "timestamp": 1767134322
+    "nextLineId": 10,
+    "content": "riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ",
+    "timestamp": 1768140053
+  },
+  {
+    "scenarioId": 1,
+    "type": "line_update",
+    "lineId": 10,
+    "nextLineId": 7,
+    "content": "riječ riječ riječ riječ riječ",
+    "timestamp": 1768140053
+  },
+  {
+    "scenarioId": 1,
+    "type": "char_rename",
+    "oldName": "ALICE",
+    "newName": "ALICIA",
+    "timestamp": 1768140053
+  },
+  {
+    "scenarioId": 1,
+    "type": "line_update",
+    "lineId": 3,
+    "nextLineId": 11,
+    "content": "riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ",
+    "timestamp": 1768140106
+  },
+  {
+    "scenarioId": 1,
+    "type": "line_update",
+    "lineId": 11,
+    "nextLineId": 12,
+    "content": "riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ",
+    "timestamp": 1768140106
+  },
+  {
+    "scenarioId": 1,
+    "type": "line_update",
+    "lineId": 12,
+    "nextLineId": 9,
+    "content": "riječ riječ riječ riječ riječ",
+    "timestamp": 1768140106
+  },
+  {
+    "scenarioId": 1,
+    "type": "char_rename",
+    "oldName": "ALICE",
+    "newName": "ALICIA",
+    "timestamp": 1768140106
   }
 ]

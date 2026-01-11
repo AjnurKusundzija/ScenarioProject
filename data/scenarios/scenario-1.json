@@ -1,56 +1,66 @@
 {
   "id": 1,
-  "title": "Test scenarij",
+  "title": "Potraga za izgubljenim ključem",
   "content": [
     {
       "lineId": 1,
-      "nextLineId": 5,
-      "text": "NAIDA"
+      "nextLineId": 2,
+      "text": "NARATOR: Sunce je polako zalazilo nad starim gradom."
     },
     {
       "lineId": 2,
       "nextLineId": 3,
-      "text": ""
+      "text": "ALICIA: Jesi li siguran da je ključ ostao u biblioteci?"
     },
     {
       "lineId": 3,
-      "nextLineId": 4,
-      "text": ""
+      "nextLineId": 11,
+      "text": "riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ"
     },
     {
       "lineId": 4,
-      "nextLineId": 6,
-      "text": "DINO"
+      "nextLineId": 5,
+      "text": "ALICIA: Moramo požuriti prije nego što čuvar zaključa glavna vrata."
     },
     {
       "lineId": 5,
-      "nextLineId": 2,
-      "text": "Mislis li da se sve ovo moglo zavrsiti drugacije?"
+      "nextLineId": 6,
+      "text": "BOB: Čekaj, čuješ li taj zvuk iza polica?"
     },
     {
       "lineId": 6,
-      "nextLineId": 7,
-      "text": "Mozda... ali onda ne bismo bili ovdje."
+      "nextLineId": null,
+      "text": "NARATOR: Iz sjene se polako pojavila nepoznata figura."
     },
     {
       "lineId": 7,
       "nextLineId": 8,
-      "text": ""
+      "text": "riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ"
     },
     {
       "lineId": 8,
-      "nextLineId": 9,
-      "text": ""
+      "nextLineId": 4,
+      "text": "riječ riječ riječ riječ riječ"
     },
     {
       "lineId": 9,
       "nextLineId": 10,
-      "text": ""
+      "text": "riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ"
     },
     {
       "lineId": 10,
-      "nextLineId": null,
-      "text": ""
+      "nextLineId": 7,
+      "text": "riječ riječ riječ riječ riječ"
+    },
+    {
+      "lineId": 11,
+      "nextLineId": 12,
+      "text": "riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ"
+    },
+    {
+      "lineId": 12,
+      "nextLineId": 9,
+      "text": "riječ riječ riječ riječ riječ"
     }
   ]
 }
