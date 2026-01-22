@@ -34,10 +34,10 @@
             <hr class="linija-separator">
             
             <div class="profil-korisnika">
-                <div class="profil-korisnika-krug">U</div>
+                <div class="profil-korisnika-krug" id="userInitials">U</div>
                 <div class="info-profil">
-                    <div class="ime">Alex Writer</div>
-                    <div class="status">Pro member</div>
+                    <div class="ime" id="userNameLabel">Alex Writer</div>
+                    <div class="status" id="userPlanLabel">Pro member</div>
                 </div>
             </div>
         </div>
@@ -47,12 +47,12 @@
         <header class="zaglavlje">
             <h1>Svi scenariji</h1>
             <div class="header-actions">
-                <input type="text" class="polje-pretraga" placeholder="Pretraga">
-                <button class="dugme-noviprojekat">+ Novi projekat</button>
+                <input type="text" class="polje-pretraga" id="projectSearch" placeholder="Pretraga">
+                <button class="dugme-noviprojekat" id="newProjectBtn">+ Novi projekat</button>
             </div>
         </header>
         
-        <div class="kartice-grid">
+        <div class="kartice-grid" id="projectsGrid">
             
             <div class="kartica-aktivna">
     <span class="aktivna-oznaka">Aktivan</span>
@@ -105,5 +105,6 @@
 
         </div>
     </main>
+    <script src="../js/projects.js"></script>
 </body>
 </html>

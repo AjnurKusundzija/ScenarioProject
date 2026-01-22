@@ -41,6 +41,26 @@ body {
   font-size: 15px;
 }
 
+.status-poruka {
+  text-align: center;
+  margin: -10px 0 18px;
+  min-height: 18px;
+  font-size: 14px;
+  color: #555;
+}
+
+.status-poruka[data-type="success"] {
+  color: #2e8055;
+}
+
+.status-poruka[data-type="error"] {
+  color: #c95757;
+}
+
+.status-poruka[data-type="info"] {
+  color: #3246a8;
+}
+
 
 .korisnik-podaci,
 .sigurnost-podaci,
