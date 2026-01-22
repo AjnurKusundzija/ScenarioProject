@@ -79,6 +79,51 @@ function replaceWholeWord(text, search, replacement) {
     return text.replace(pattern, replacement);
 }
 
+function createInitialScenarioState(scenario) {
+    return {
+        id: scenario.id,
+        title: scenario.title,
+        content: [
+            {
+                lineId: 1,
+                nextLineId: null,
+                text: ""
+            }
+        ]
+    };
+}
+
+function applyLineUpdate(stateMap, delta) {
+    if (!delta) return;
+    const lineId = Number(delta.lineId);
+    if (!Number.isFinite(lineId)) return;
+    let nextLineId = null;
+    if (delta.nextLineId !== undefined && delta.nextLineId !== null) {
+        const parsedNext = Number(delta.nextLineId);
+        nextLineId = Number.isFinite(parsedNext) ? parsedNext : null;
+    }
+    const content = typeof delta.content === "string" ? delta.content : "";
+    const existing = stateMap.get(lineId);
+    if (existing) {
+        existing.text = content;
+        existing.nextLineId = nextLineId;
+        return;
+    }
+    stateMap.set(lineId, {
+        lineId: lineId,
+        nextLineId: nextLineId,
+        text: content
+    });
+}
+
+function applyCharRename(stateMap, oldName, newName) {
+    if (!oldName || !newName) return;
+    stateMap.forEach(line => {
+        if (typeof line.text !== "string") return;
+        line.text = replaceWholeWord(line.text, oldName, newName);
+    });
+}
+
 function removeUserLineLocks(userId, keepScenarioId, keepLineId) {
     for (let i = lineLocks.length - 1; i >= 0; i -= 1) {
         const lock = lineLocks[i];
@@ -439,6 +484,116 @@ app.get("/api/scenarios/:scenarioId", async (req, res) => {
 
         const lines = await Line.findAll({ where: { scenarioId: scenarioId }, raw: true });
         const orderedContent = orderScenarioContent(lines);
+        res.status(200).json({
+            id: scenario.id,
+            title: scenario.title,
+            content: orderedContent.map(line => ({
+                lineId: line.lineId,
+                nextLineId: line.nextLineId === undefined ? null : line.nextLineId,
+                text: line.text
+            }))
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Greska na serveru!" });
+    }
+});
+
+app.post("/api/scenarios/:scenarioId/checkpoint", async (req, res) => {
+    try {
+        const scenarioId = parseInt(req.params.scenarioId, 10);
+        const scenario = await Scenario.findByPk(scenarioId);
+        if (!scenario) {
+            res.status(404).json({ message: "Scenario ne postoji!" });
+            return;
+        }
+
+        const timestamp = Math.floor(Date.now() / 1000);
+        await Checkpoint.create({
+            scenarioId: scenarioId,
+            timestamp: timestamp
+        });
+
+        res.status(200).json({ message: "Checkpoint je uspjesno kreiran!" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Greska na serveru!" });
+    }
+});
+
+app.get("/api/scenarios/:scenarioId/checkpoints", async (req, res) => {
+    try {
+        const scenarioId = parseInt(req.params.scenarioId, 10);
+        const scenario = await Scenario.findByPk(scenarioId);
+        if (!scenario) {
+            res.status(404).json({ message: "Scenario ne postoji!" });
+            return;
+        }
+
+        const checkpoints = await Checkpoint.findAll({
+            where: { scenarioId: scenarioId },
+            order: [["timestamp", "ASC"], ["id", "ASC"]],
+            raw: true
+        });
+
+        res.status(200).json(checkpoints.map(checkpoint => ({
+            id: checkpoint.id,
+            timestamp: checkpoint.timestamp
+        })));
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Greska na serveru!" });
+    }
+});
+
+app.get("/api/scenarios/:scenarioId/restore/:checkpointId", async (req, res) => {
+    try {
+        const scenarioId = parseInt(req.params.scenarioId, 10);
+        const checkpointId = parseInt(req.params.checkpointId, 10);
+
+        const scenario = await Scenario.findByPk(scenarioId);
+        if (!scenario) {
+            res.status(404).json({ message: "Scenario ne postoji!" });
+            return;
+        }
+
+        const checkpoint = await Checkpoint.findOne({
+            where: { id: checkpointId, scenarioId: scenarioId },
+            raw: true
+        });
+
+        if (!checkpoint) {
+            res.status(404).json({ message: "Checkpoint ne postoji!" });
+            return;
+        }
+
+        const deltas = await Delta.findAll({
+            where: {
+                scenarioId: scenarioId,
+                timestamp: { [Op.lte]: checkpoint.timestamp }
+            },
+            order: [["timestamp", "ASC"], ["id", "ASC"]],
+            raw: true
+        });
+
+        const initialState = createInitialScenarioState(scenario);
+        const stateMap = new Map();
+        initialState.content.forEach(line => {
+            stateMap.set(line.lineId, { ...line });
+        });
+
+        deltas.forEach(delta => {
+            if (delta.type === "line_update") {
+                applyLineUpdate(stateMap, delta);
+                return;
+            }
+            if (delta.type === "char_rename") {
+                applyCharRename(stateMap, delta.oldName, delta.newName);
+            }
+        });
+
+        const orderedContent = orderScenarioContent(Array.from(stateMap.values()));
+
         res.status(200).json({
             id: scenario.id,
             title: scenario.title,
