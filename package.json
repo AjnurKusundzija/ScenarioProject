@@ -1,6 +1,8 @@
 {
   "dependencies": {
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "mysql2": "^3.16.1",
+    "sequelize": "^6.37.7"
   },
   "name": "wt26p19621",
   "version": "1.0.0",

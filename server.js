@@ -1,7 +1,7 @@
 const express = require("express");
-const fs = require("fs");
-const fsp = fs.promises;
 const path = require("path");
+const { Op } = require("sequelize");
+const { sequelize, Scenario, Line, Delta, Checkpoint } = require("./modeli");
 
 const app = express();
 app.use(express.json());
@@ -9,76 +9,8 @@ app.use(express.static(path.join(__dirname, "html")));
 app.use("/css", express.static(path.join(__dirname, "css")));
 app.use("/js", express.static(path.join(__dirname, "js")));
 
-const dataDir = path.join(__dirname, "data");
-const scenariosDir = path.join(dataDir, "scenarios");
-const deltasFile = path.join(dataDir, "deltas.json");
-
 const lineLocks = [];
 const characterLocks = [];
-
-async function ensureScenariosDir() {
-    await fsp.mkdir(scenariosDir, { recursive: true });
-}
-
-function scenarioFilePath(scenarioId) {
-    return path.join(scenariosDir, `scenario-${scenarioId}.json`);
-}
-
-async function loadScenario(scenarioId) {
-    await ensureScenariosDir();
-    try {
-        const raw = await fsp.readFile(scenarioFilePath(scenarioId), "utf8");
-        return JSON.parse(raw);
-    } catch (error) {
-        if (error.code === "ENOENT") return null;
-        throw error;
-    }
-}
-
-async function saveScenario(scenario) {
-    await ensureScenariosDir();
-    await fsp.writeFile(
-        scenarioFilePath(scenario.id),
-        JSON.stringify(scenario, null, 2)
-    );
-}
-
-async function listScenarioIds() {
-    await ensureScenariosDir();
-    const entries = await fsp.readdir(scenariosDir, { withFileTypes: true });
-    const ids = [];
-    entries.forEach(entry => {
-        if (!entry.isFile()) return;
-        const match = /^scenario-(\d+)\.json$/.exec(entry.name);
-        if (match) ids.push(parseInt(match[1], 10));
-    });
-    return ids;
-}
-
-async function getNextScenarioId() {
-    const ids = await listScenarioIds();
-    return ids.length ? Math.max(...ids) + 1 : 1;
-}
-
-async function ensureDeltasFile() {
-    await fsp.mkdir(dataDir, { recursive: true });
-    try {
-        await fsp.access(deltasFile);
-    } catch (error) {
-        await fsp.writeFile(deltasFile, JSON.stringify([], null, 2));
-    }
-}
-
-async function loadDeltas() {
-    await ensureDeltasFile();
-    const raw = await fsp.readFile(deltasFile, "utf8");
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
-}
-
-async function saveDeltas(deltas) {
-    await fsp.writeFile(deltasFile, JSON.stringify(deltas, null, 2));
-}
 
 function wrapText(text, maxWords) {
     const safeText = typeof text === "string" ? text : "";
@@ -92,26 +24,28 @@ function wrapText(text, maxWords) {
     return chunks;
 }
 
-function getNextLineId(scenario) {
-    const maxId = scenario.content.reduce((max, line) => {
-        return line.lineId > max ? line.lineId : max;
-    }, 0);
-    return maxId + 1;
+async function getNextLineId(scenarioId, transaction) {
+    const maxId = await Line.max("lineId", {
+        where: { scenarioId: scenarioId },
+        transaction: transaction
+    });
+    const safeMax = Number.isFinite(maxId) ? maxId : 0;
+    return safeMax + 1;
 }
 
-function orderScenarioContent(scenario) {
+function orderScenarioContent(lines) {
     const map = new Map();
     const referenced = new Set();
-    scenario.content.forEach(line => {
+    lines.forEach(line => {
         map.set(line.lineId, line);
         if (line.nextLineId !== null && line.nextLineId !== undefined) {
             referenced.add(line.nextLineId);
         }
     });
 
-    const start = scenario.content.find(line => !referenced.has(line.lineId));
+    const start = lines.find(line => !referenced.has(line.lineId));
     if (!start) {
-        return [...scenario.content].sort((a, b) => a.lineId - b.lineId);
+        return [...lines].sort((a, b) => a.lineId - b.lineId);
     }
 
     const ordered = [];
@@ -124,8 +58,8 @@ function orderScenarioContent(scenario) {
         current = map.get(current.nextLineId);
     }
 
-    if (ordered.length < scenario.content.length) {
-        scenario.content
+    if (ordered.length < lines.length) {
+        lines
             .filter(line => !visited.has(line.lineId))
             .sort((a, b) => a.lineId - b.lineId)
             .forEach(line => ordered.push(line));
@@ -136,13 +70,6 @@ function orderScenarioContent(scenario) {
 
 function escapeRegExp(value) {
     return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
-function hasWholeWord(text, search) {
-    if (typeof text !== "string") return false;
-    if (!search) return false;
-    const pattern = new RegExp(`\\b${escapeRegExp(search)}\\b`);
-    return pattern.test(text);
 }
 
 function replaceWholeWord(text, search, replacement) {
@@ -183,11 +110,24 @@ app.post("/api/scenarios", async (req, res) => {
     try {
         const titleRaw = req.body && typeof req.body.title === "string" ? req.body.title : "";
         const title = titleRaw.trim() ? titleRaw.trim() : "Neimenovani scenarij";
-        const scenarioId = await getNextScenarioId();
 
-        const scenario = {
-            id: scenarioId,
-            title: title,
+        const scenario = await sequelize.transaction(async (transaction) => {
+            const createdScenario = await Scenario.create({ title: title }, { transaction: transaction });
+            await Line.create(
+                {
+                    lineId: 1,
+                    nextLineId: null,
+                    text: "",
+                    scenarioId: createdScenario.id
+                },
+                { transaction: transaction }
+            );
+            return createdScenario;
+        });
+
+        res.status(200).json({
+            id: scenario.id,
+            title: scenario.title,
             content: [
                 {
                     lineId: 1,
@@ -195,10 +135,7 @@ app.post("/api/scenarios", async (req, res) => {
                     text: ""
                 }
             ]
-        };
-
-        await saveScenario(scenario);
-        res.status(200).json(scenario);
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Greska na serveru!" });
@@ -211,13 +148,13 @@ app.post("/api/scenarios/:scenarioId/lines/:lineId/lock", async (req, res) => {
         const lineId = parseInt(req.params.lineId, 10);
         const userId = req.body ? req.body.userId : null;
 
-        const scenario = await loadScenario(scenarioId);
+        const scenario = await Scenario.findByPk(scenarioId);
         if (!scenario) {
             res.status(404).json({ message: "Scenario ne postoji!" });
             return;
         }
 
-        const line = scenario.content.find(l => l.lineId === lineId);
+        const line = await Line.findOne({ where: { scenarioId: scenarioId, lineId: lineId } });
         if (!line) {
             res.status(404).json({ message: "Linija ne postoji!" });
             return;
@@ -257,13 +194,13 @@ app.put("/api/scenarios/:scenarioId/lines/:lineId", async (req, res) => {
             return;
         }
 
-        const scenario = await loadScenario(scenarioId);
+        const scenario = await Scenario.findByPk(scenarioId);
         if (!scenario) {
             res.status(404).json({ message: "Scenario ne postoji!" });
             return;
         }
 
-        const line = scenario.content.find(l => l.lineId === lineId);
+        const line = await Line.findOne({ where: { scenarioId: scenarioId, lineId: lineId } });
         if (!line) {
             res.status(404).json({ message: "Linija ne postoji!" });
             return;
@@ -283,56 +220,75 @@ app.put("/api/scenarios/:scenarioId/lines/:lineId", async (req, res) => {
             return;
         }
 
-        const wrappedLines = [];
-        newText.forEach(item => {
-            wrapText(item, 20).forEach(chunk => wrappedLines.push(chunk));
-        });
+        await sequelize.transaction(async (transaction) => {
+            const wrappedLines = [];
+            newText.forEach(item => {
+                wrapText(item, 20).forEach(chunk => wrappedLines.push(chunk));
+            });
 
-        const oldNext = line.nextLineId === undefined ? null : line.nextLineId;
-        line.text = wrappedLines[0] || "";
+            const oldNext = line.nextLineId === undefined ? null : line.nextLineId;
+            const updatedText = wrappedLines[0] || "";
+            const updatePayload = {
+                text: updatedText,
+                nextLineId: oldNext
+            };
 
-        const newLineIds = [];
-        if (wrappedLines.length > 1) {
-            let nextId = getNextLineId(scenario);
-            for (let i = 1; i < wrappedLines.length; i += 1) {
-                newLineIds.push(nextId);
-                nextId += 1;
+            const newLineIds = [];
+            const newLineRecords = [];
+            if (wrappedLines.length > 1) {
+                let nextId = await getNextLineId(scenarioId, transaction);
+                for (let i = 1; i < wrappedLines.length; i += 1) {
+                    newLineIds.push(nextId);
+                    nextId += 1;
+                }
+
+                updatePayload.nextLineId = newLineIds[0];
+
+                for (let i = 0; i < newLineIds.length; i += 1) {
+                    newLineRecords.push({
+                        lineId: newLineIds[i],
+                        nextLineId: i < newLineIds.length - 1 ? newLineIds[i + 1] : oldNext,
+                        text: wrappedLines[i + 1],
+                        scenarioId: scenarioId
+                    });
+                }
             }
 
-            line.nextLineId = newLineIds[0];
+            await Line.update(updatePayload, {
+                where: { scenarioId: scenarioId, lineId: lineId },
+                transaction: transaction
+            });
 
-            for (let i = 0; i < newLineIds.length; i += 1) {
-                scenario.content.push({
-                    lineId: newLineIds[i],
-                    nextLineId: i < newLineIds.length - 1 ? newLineIds[i + 1] : oldNext,
-                    text: wrappedLines[i + 1]
-                });
+            if (newLineRecords.length > 0) {
+                await Line.bulkCreate(newLineRecords, { transaction: transaction });
             }
-        } else {
-            line.nextLineId = oldNext;
-        }
 
-        await saveScenario(scenario);
-        removeLineLock(scenarioId, lineId);
-
-        const deltas = await loadDeltas();
-        const timestamp = Math.floor(Date.now() / 1000);
-        const affectedLineIds = [lineId, ...newLineIds];
-
-        affectedLineIds.forEach(id => {
-            const updatedLine = scenario.content.find(l => l.lineId === id);
-            if (!updatedLine) return;
-            deltas.push({
+            const timestamp = Math.floor(Date.now() / 1000);
+            const deltasToCreate = [];
+            deltasToCreate.push({
                 scenarioId: scenarioId,
                 type: "line_update",
-                lineId: updatedLine.lineId,
-                nextLineId: updatedLine.nextLineId === undefined ? null : updatedLine.nextLineId,
-                content: updatedLine.text,
+                lineId: lineId,
+                nextLineId: updatePayload.nextLineId === undefined ? null : updatePayload.nextLineId,
+                content: updatePayload.text,
                 timestamp: timestamp
             });
+
+            newLineRecords.forEach(record => {
+                deltasToCreate.push({
+                    scenarioId: scenarioId,
+                    type: "line_update",
+                    lineId: record.lineId,
+                    nextLineId: record.nextLineId === undefined ? null : record.nextLineId,
+                    content: record.text,
+                    timestamp: timestamp
+                });
+            });
+
+            await Delta.bulkCreate(deltasToCreate, { transaction: transaction });
         });
 
-        await saveDeltas(deltas);
+        removeLineLock(scenarioId, lineId);
         res.status(200).json({ message: "Linija je uspjesno azurirana!" });
     } catch (error) {
         console.error(error);
@@ -346,7 +302,7 @@ app.post("/api/scenarios/:scenarioId/characters/lock", async (req, res) => {
         const userId = req.body ? req.body.userId : null;
         const characterName = req.body ? req.body.characterName : null;
 
-        const scenario = await loadScenario(scenarioId);
+        const scenario = await Scenario.findByPk(scenarioId);
         if (!scenario) {
             res.status(404).json({ message: "Scenario ne postoji!" });
             return;
@@ -378,32 +334,43 @@ app.post("/api/scenarios/:scenarioId/characters/update", async (req, res) => {
         const oldName = req.body ? req.body.oldName : null;
         const newName = req.body ? req.body.newName : null;
 
-        const scenario = await loadScenario(scenarioId);
+        const scenario = await Scenario.findByPk(scenarioId);
         if (!scenario) {
             res.status(404).json({ message: "Scenario ne postoji!" });
             return;
         }
 
-        scenario.content.forEach(line => {
-            if (typeof line.text === "string") {
-                line.text = replaceWholeWord(line.text, oldName, newName);
+        await sequelize.transaction(async (transaction) => {
+            const lines = await Line.findAll({ where: { scenarioId: scenarioId }, transaction: transaction });
+            const updates = [];
+            lines.forEach(line => {
+                if (typeof line.text !== "string") return;
+                const updatedText = replaceWholeWord(line.text, oldName, newName);
+                if (updatedText !== line.text) {
+                    updates.push({ id: line.id, text: updatedText });
+                }
+            });
+
+            if (updates.length > 0) {
+                await Promise.all(updates.map(update => (
+                    Line.update(
+                        { text: update.text },
+                        { where: { id: update.id }, transaction: transaction }
+                    )
+                )));
             }
+
+            const timestamp = Math.floor(Date.now() / 1000);
+            await Delta.create({
+                scenarioId: scenarioId,
+                type: "char_rename",
+                oldName: oldName,
+                newName: newName,
+                timestamp: timestamp
+            }, { transaction: transaction });
         });
 
-        await saveScenario(scenario);
         removeCharacterLock(scenarioId, oldName);
-
-        const deltas = await loadDeltas();
-        const timestamp = Math.floor(Date.now() / 1000);
-        deltas.push({
-            scenarioId: scenarioId,
-            type: "char_rename",
-            oldName: oldName,
-            newName: newName,
-            timestamp: timestamp
-        });
-        await saveDeltas(deltas);
-
         res.status(200).json({ message: "Ime lika je uspjesno promijenjeno!" });
     } catch (error) {
         console.error(error);
@@ -418,38 +385,41 @@ app.get("/api/scenarios/:scenarioId/deltas", async (req, res) => {
         const sinceParsed = parseInt(sinceRaw, 10);
         const since = Number.isFinite(sinceParsed) ? sinceParsed : 0;
 
-        const scenario = await loadScenario(scenarioId);
+        const scenario = await Scenario.findByPk(scenarioId);
         if (!scenario) {
             res.status(404).json({ message: "Scenario ne postoji!" });
             return;
         }
 
-        const deltas = await loadDeltas();
-        const result = deltas
-            .filter(delta => delta.scenarioId === scenarioId)
-            .filter(delta => typeof delta.timestamp === "number" && delta.timestamp > since)
-            .map(delta => {
-                if (delta.type === "line_update") {
-                    return {
-                        type: "line_update",
-                        lineId: delta.lineId,
-                        nextLineId: delta.nextLineId,
-                        content: delta.content,
-                        timestamp: delta.timestamp
-                    };
-                }
-                if (delta.type === "char_rename") {
-                    return {
-                        type: "char_rename",
-                        oldName: delta.oldName,
-                        newName: delta.newName,
-                        timestamp: delta.timestamp
-                    };
-                }
-                return null;
-            })
-            .filter(item => item !== null)
-            .sort((a, b) => a.timestamp - b.timestamp);
+        const deltas = await Delta.findAll({
+            where: {
+                scenarioId: scenarioId,
+                timestamp: { [Op.gt]: since }
+            },
+            order: [["timestamp", "ASC"]],
+            raw: true
+        });
+
+        const result = deltas.map(delta => {
+            if (delta.type === "line_update") {
+                return {
+                    type: "line_update",
+                    lineId: delta.lineId,
+                    nextLineId: delta.nextLineId,
+                    content: delta.content,
+                    timestamp: delta.timestamp
+                };
+            }
+            if (delta.type === "char_rename") {
+                return {
+                    type: "char_rename",
+                    oldName: delta.oldName,
+                    newName: delta.newName,
+                    timestamp: delta.timestamp
+                };
+            }
+            return null;
+        }).filter(item => item !== null);
 
         res.status(200).json({ deltas: result });
     } catch (error) {
@@ -461,13 +431,14 @@ app.get("/api/scenarios/:scenarioId/deltas", async (req, res) => {
 app.get("/api/scenarios/:scenarioId", async (req, res) => {
     try {
         const scenarioId = parseInt(req.params.scenarioId, 10);
-        const scenario = await loadScenario(scenarioId);
+        const scenario = await Scenario.findByPk(scenarioId);
         if (!scenario) {
             res.status(404).json({ message: "Scenario ne postoji!" });
             return;
         }
 
-        const orderedContent = orderScenarioContent(scenario);
+        const lines = await Line.findAll({ where: { scenarioId: scenarioId }, raw: true });
+        const orderedContent = orderScenarioContent(lines);
         res.status(200).json({
             id: scenario.id,
             title: scenario.title,
@@ -484,7 +455,19 @@ app.get("/api/scenarios/:scenarioId", async (req, res) => {
 });
 
 const PORT = 3000;
-app.listen(PORT, () => {
-    console.log("Server radi na portu " + PORT);
-    console.log("URL: http://localhost:" + PORT + "/writing.html");
-});
+
+async function startServer() {
+    try {
+        await sequelize.authenticate();
+        await sequelize.sync({ force: true });
+        app.listen(PORT, () => {
+            console.log("Server radi na portu " + PORT);
+            console.log("URL: http://localhost:" + PORT + "/writing.html");
+        });
+    } catch (error) {
+        console.error("Ne mogu pokrenuti server:", error);
+        process.exit(1);
+    }
+}
+
+startServer();

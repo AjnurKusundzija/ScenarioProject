@@ -1,0 +1,1 @@
+Nema dodatnih atributa. Timestamps su iskljuceni u svim modelima.

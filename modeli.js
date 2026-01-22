@@ -1,0 +1,106 @@
+const Sequelize = require("sequelize");
+const sequelize = require("./baza");
+
+const Scenario = sequelize.define("Scenario", {
+    title: {
+        type: Sequelize.STRING,
+        allowNull: false
+    }
+}, {
+    timestamps: false
+});
+
+const Line = sequelize.define("Line", {
+    lineId: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+    },
+    text: {
+        type: Sequelize.TEXT,
+        allowNull: false,
+        defaultValue: ""
+    },
+    nextLineId: {
+        type: Sequelize.INTEGER,
+        allowNull: true
+    },
+    scenarioId: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+    }
+}, {
+    timestamps: false,
+    indexes: [
+        {
+            unique: true,
+            fields: ["scenarioId", "lineId"]
+        }
+    ]
+});
+
+const Delta = sequelize.define("Delta", {
+    scenarioId: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+    },
+    type: {
+        type: Sequelize.STRING,
+        allowNull: false
+    },
+    lineId: {
+        type: Sequelize.INTEGER,
+        allowNull: true
+    },
+    nextLineId: {
+        type: Sequelize.INTEGER,
+        allowNull: true
+    },
+    content: {
+        type: Sequelize.TEXT,
+        allowNull: true
+    },
+    oldName: {
+        type: Sequelize.STRING,
+        allowNull: true
+    },
+    newName: {
+        type: Sequelize.STRING,
+        allowNull: true
+    },
+    timestamp: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+    }
+}, {
+    timestamps: false
+});
+
+const Checkpoint = sequelize.define("Checkpoint", {
+    scenarioId: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+    },
+    timestamp: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+    }
+}, {
+    timestamps: false
+});
+
+Scenario.hasMany(Line, { foreignKey: "scenarioId", onDelete: "CASCADE" });
+Line.belongsTo(Scenario, { foreignKey: "scenarioId" });
+
+Scenario.hasMany(Delta, { foreignKey: "scenarioId", onDelete: "CASCADE" });
+Delta.belongsTo(Scenario, { foreignKey: "scenarioId" });
+
+Scenario.hasMany(Checkpoint, { foreignKey: "scenarioId", onDelete: "CASCADE" });
+Checkpoint.belongsTo(Scenario, { foreignKey: "scenarioId" });
+
+module.exports = {
+    sequelize,
+    Scenario,
+    Line,
+    Delta,
+    Checkpoint
+};
