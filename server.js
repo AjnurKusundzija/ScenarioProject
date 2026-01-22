@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const { Op } = require("sequelize");
 const { sequelize, Scenario, Line, Delta, Checkpoint } = require("./modeli");
+const seedData = require("./seed-data");
 
 const app = express();
 app.use(express.json());
@@ -149,6 +150,58 @@ function removeCharacterLock(scenarioId, characterName) {
             characterLocks.splice(i, 1);
         }
     }
+}
+
+async function seedDatabase() {
+    const scenarioCount = await Scenario.count();
+    if (scenarioCount > 0) return;
+
+    const scenarios = Array.isArray(seedData.scenarios) ? seedData.scenarios : [];
+    if (scenarios.length === 0) return;
+
+    await sequelize.transaction(async (transaction) => {
+        await Scenario.bulkCreate(
+            scenarios.map(scenario => ({
+                id: scenario.id,
+                title: scenario.title
+            })),
+            { transaction: transaction }
+        );
+
+        const lines = [];
+        scenarios.forEach(scenario => {
+            if (!Array.isArray(scenario.content)) return;
+            scenario.content.forEach(line => {
+                lines.push({
+                    lineId: line.lineId,
+                    nextLineId: line.nextLineId === undefined ? null : line.nextLineId,
+                    text: typeof line.text === "string" ? line.text : "",
+                    scenarioId: scenario.id
+                });
+            });
+        });
+
+        if (lines.length > 0) {
+            await Line.bulkCreate(lines, { transaction: transaction });
+        }
+
+        const deltas = Array.isArray(seedData.deltas) ? seedData.deltas : [];
+        if (deltas.length > 0) {
+            await Delta.bulkCreate(
+                deltas.map(delta => ({
+                    scenarioId: delta.scenarioId,
+                    type: delta.type,
+                    lineId: delta.lineId === undefined || delta.lineId === null ? null : delta.lineId,
+                    nextLineId: delta.nextLineId === undefined || delta.nextLineId === null ? null : delta.nextLineId,
+                    content: delta.content === undefined || delta.content === null ? null : delta.content,
+                    oldName: delta.oldName === undefined || delta.oldName === null ? null : delta.oldName,
+                    newName: delta.newName === undefined || delta.newName === null ? null : delta.newName,
+                    timestamp: delta.timestamp
+                })),
+                { transaction: transaction }
+            );
+        }
+    });
 }
 
 app.post("/api/scenarios", async (req, res) => {
@@ -615,6 +668,7 @@ async function startServer() {
     try {
         await sequelize.authenticate();
         await sequelize.sync({ force: true });
+        await seedDatabase();
         app.listen(PORT, () => {
             console.log("Server radi na portu " + PORT);
             console.log("URL: http://localhost:" + PORT + "/writing.html");
