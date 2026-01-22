@@ -449,6 +449,20 @@ app.post("/api/scenarios/:scenarioId/characters/update", async (req, res) => {
             return;
         }
 
+        const currentLock = characterLocks.find(lock => (
+            lock.scenarioId === scenarioId && lock.characterName === oldName
+        ));
+
+        if (!currentLock) {
+            res.status(409).json({ message: "Ime lika nije zakljucano!" });
+            return;
+        }
+
+        if (currentLock.userId !== userId) {
+            res.status(409).json({ message: "Konflikt! Ime lika je vec zakljucano!" });
+            return;
+        }
+
         await sequelize.transaction(async (transaction) => {
             const lines = await Line.findAll({ where: { scenarioId: scenarioId }, transaction: transaction });
             const updates = [];

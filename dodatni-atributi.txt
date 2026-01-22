@@ -1,1 +1,4 @@
-Nema dodatnih atributa. Timestamps su iskljuceni u svim modelima.
+Dodatni atributi:
+
+Line model:
+- indexes: Kompozitni jedinstveni indeks na (scenarioId, lineId) - osigurava da unutar jednog scenarija ne mogu postojati dvije linije sa istim lineId.

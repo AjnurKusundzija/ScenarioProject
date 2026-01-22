@@ -2,6 +2,11 @@ const Sequelize = require("sequelize");
 const sequelize = require("./baza");
 
 const Scenario = sequelize.define("Scenario", {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
     title: {
         type: Sequelize.STRING,
         allowNull: false
@@ -13,6 +18,11 @@ const Scenario = sequelize.define("Scenario", {
 });
 
 const Line = sequelize.define("Line", {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
     lineId: {
         type: Sequelize.INTEGER,
         allowNull: false
@@ -43,6 +53,11 @@ const Line = sequelize.define("Line", {
 });
 
 const Delta = sequelize.define("Delta", {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
     scenarioId: {
         type: Sequelize.INTEGER,
         allowNull: false
@@ -82,6 +97,11 @@ const Delta = sequelize.define("Delta", {
 });
 
 const Checkpoint = sequelize.define("Checkpoint", {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
     scenarioId: {
         type: Sequelize.INTEGER,
         allowNull: false
