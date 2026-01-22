@@ -12,6 +12,17 @@ app.use("/js", express.static(path.join(__dirname, "js")));
 
 const lineLocks = [];
 const characterLocks = [];
+let lastTimestamp = 0;
+
+function getUnixTimestamp() {
+    const now = Math.floor(Date.now() / 1000);
+    if (now <= lastTimestamp) {
+        lastTimestamp += 1;
+        return lastTimestamp;
+    }
+    lastTimestamp = now;
+    return now;
+}
 
 function wrapText(text, maxWords) {
     const safeText = typeof text === "string" ? text : "";
@@ -361,7 +372,7 @@ app.put("/api/scenarios/:scenarioId/lines/:lineId", async (req, res) => {
                 await Line.bulkCreate(newLineRecords, { transaction: transaction });
             }
 
-            const timestamp = Math.floor(Date.now() / 1000);
+            const timestamp = getUnixTimestamp();
             const deltasToCreate = [];
             deltasToCreate.push({
                 scenarioId: scenarioId,
@@ -458,7 +469,7 @@ app.post("/api/scenarios/:scenarioId/characters/update", async (req, res) => {
                 )));
             }
 
-            const timestamp = Math.floor(Date.now() / 1000);
+            const timestamp = getUnixTimestamp();
             await Delta.create({
                 scenarioId: scenarioId,
                 type: "char_rename",
@@ -561,7 +572,7 @@ app.post("/api/scenarios/:scenarioId/checkpoint", async (req, res) => {
             return;
         }
 
-        const timestamp = Math.floor(Date.now() / 1000);
+        const timestamp = getUnixTimestamp();
         await Checkpoint.create({
             scenarioId: scenarioId,
             timestamp: timestamp

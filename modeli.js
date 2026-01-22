@@ -7,7 +7,9 @@ const Scenario = sequelize.define("Scenario", {
         allowNull: false
     }
 }, {
-    timestamps: false
+    timestamps: false,
+    freezeTableName: true,
+    tableName: "Scenario"
 });
 
 const Line = sequelize.define("Line", {
@@ -30,6 +32,8 @@ const Line = sequelize.define("Line", {
     }
 }, {
     timestamps: false,
+    freezeTableName: true,
+    tableName: "Line",
     indexes: [
         {
             unique: true,
@@ -72,7 +76,9 @@ const Delta = sequelize.define("Delta", {
         allowNull: false
     }
 }, {
-    timestamps: false
+    timestamps: false,
+    freezeTableName: true,
+    tableName: "Delta"
 });
 
 const Checkpoint = sequelize.define("Checkpoint", {
@@ -85,7 +91,9 @@ const Checkpoint = sequelize.define("Checkpoint", {
         allowNull: false
     }
 }, {
-    timestamps: false
+    timestamps: false,
+    freezeTableName: true,
+    tableName: "Checkpoint"
 });
 
 Scenario.hasMany(Line, { foreignKey: "scenarioId", onDelete: "CASCADE" });
