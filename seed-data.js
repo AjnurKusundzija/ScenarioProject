@@ -16,7 +16,7 @@ const seedData = {
         },
         {
           "lineId": 3,
-          "nextLineId": 13,
+          "nextLineId": 11,
           "text": "rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d"
         },
         {
@@ -62,16 +62,6 @@ const seedData = {
         {
           "lineId": 12,
           "nextLineId": 9,
-          "text": "rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d"
-        },
-        {
-          "lineId": 13,
-          "nextLineId": 14,
-          "text": "rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d"
-        },
-        {
-          "lineId": 14,
-          "nextLineId": 11,
           "text": "rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d"
         }
       ]
@@ -517,24 +507,8 @@ const seedData = {
       "scenarioId": 1,
       "type": "line_update",
       "lineId": 3,
-      "nextLineId": 13,
-      "content": "rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d",
-      "timestamp": 1769090850
-    },
-    {
-      "scenarioId": 1,
-      "type": "line_update",
-      "lineId": 13,
-      "nextLineId": 14,
-      "content": "rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d",
-      "timestamp": 1769090850
-    },
-    {
-      "scenarioId": 1,
-      "type": "line_update",
-      "lineId": 14,
       "nextLineId": 11,
-      "content": "rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d",
+      "content": "rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d rije\u010d",
       "timestamp": 1769090850
     },
     {

@@ -587,12 +587,16 @@ app.post("/api/scenarios/:scenarioId/checkpoint", async (req, res) => {
         }
 
         const timestamp = getUnixTimestamp();
-        await Checkpoint.create({
+        const checkpoint = await Checkpoint.create({
             scenarioId: scenarioId,
             timestamp: timestamp
         });
 
-        res.status(200).json({ message: "Checkpoint je uspjesno kreiran!" });
+        res.status(200).json({
+            message: "Checkpoint je uspjesno kreiran!",
+            id: checkpoint.id,
+            timestamp: checkpoint.timestamp
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Greska na serveru!" });
